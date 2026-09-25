@@ -1,18 +1,16 @@
 ---
-title: Meet us in Maryland.
-eyebrow: Attend CISA 2027
-description: Plan your visit to CISA 2027 at the University of Maryland in College Park, June 1–3. Registration and travel details will follow.
-intro: Three days to explore new research, exchange ideas, and meet the people behind the work. Join us in College Park.
+title: Attend
+description: Dates, venue, registration, travel, accommodation, and accessibility information for CISA 2027 in College Park, Maryland.
 ---
 
-## A place for the imaging community
+## Venue
 
-CISA 2027 will take place in person at the University of Maryland in College Park, Maryland. The building, room details, and arrival instructions will be announced here.
+CISA 2027 will take place in person at the University of Maryland in College Park, Maryland. The building, rooms, and arrival instructions will be announced.
 
 ## Travel and accommodation
 
-Recommended hotels, any conference room blocks, campus transportation, and parking guidance will be published when confirmed. Please wait for the 2027 information before using hotel recommendations from previous editions.
+Hotel recommendations, conference room blocks, campus transportation, and parking information will be published when confirmed.
 
-## Planning your visit
+## Accessibility and contact
 
-Registration dates, fees, and what is included will be announced here. Questions about accessibility, attendance, or your visit are welcome at the conference contact address below.
+For questions about accessibility, travel, or attendance, contact the organizers at the address below.

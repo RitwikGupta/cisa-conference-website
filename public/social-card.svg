@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="#F7F8F5"/><rect x="858" width="342" height="630" fill="#102638"/><g fill="none" stroke="#9FF4DF"><path d="M1140 90a225 225 0 0 0 0 450" stroke-width="2"/><path d="M1140 145a170 170 0 0 0 0 340" stroke-width="2"/><path d="M1140 200a115 115 0 0 0 0 230" stroke-width="2"/><path d="M1140 255a60 60 0 0 0 0 120" stroke-width="2"/></g><circle cx="1140" cy="315" r="9" fill="#9FF4DF"/><g font-family="sans-serif" fill="#102638"><text x="65" y="92" font-size="35" font-weight="700">CISA <tspan font-size="22" font-weight="400">2027</tspan></text><text x="65" y="237" font-size="65" letter-spacing="-3">Advancing</text><text x="65" y="314" font-size="65" letter-spacing="-3">computational</text><text x="65" y="391" font-size="65" letter-spacing="-3">imaging, <tspan fill="#087F83">together.</tspan></text><text x="65" y="507" font-size="23">June 1–3, 2027 · University of Maryland</text><text x="65" y="549" font-size="18" fill="#52616B">IEEE Conference on Computational Imaging Using Synthetic Apertures</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="#F7F8F5"/>
+<rect x="920" width="280" height="630" fill="#102638"/>
+<g fill="none" stroke="#9FF4DF" stroke-width="2"><path d="M1140 110a205 205 0 0 0 0 410"/><path d="M1140 170a145 145 0 0 0 0 290"/><path d="M1140 230a85 85 0 0 0 0 170"/></g><circle cx="1140" cy="315" r="7" fill="#9FF4DF"/>
+<g font-family="Inter, sans-serif" fill="#102638">
+<text x="64" y="100" font-size="40" font-weight="600">CISA 2027</text>
+<text x="64" y="226" font-size="42" font-weight="500"><tspan x="64">2027 IEEE Conference on</tspan><tspan x="64" dy="58">Computational Imaging</tspan><tspan x="64" dy="58">Using Synthetic Apertures</tspan></text>
+<text x="64" y="464" font-size="27">June 1–3, 2027</text>
+<text x="64" y="510" font-size="27">University of Maryland</text>
+<text x="64" y="549" font-size="23" fill="#52616B">College Park, Maryland</text>
+</g></svg>

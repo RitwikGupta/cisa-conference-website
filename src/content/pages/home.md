@@ -1,8 +1,7 @@
 ---
-title: Advancing computational imaging, together.
-eyebrow: A meeting of ideas. A wider aperture.
-description: Join CISA 2027 at the University of Maryland, June 1–3. Explore synthetic apertures, computational imaging, inverse problems, and AI.
-intro: CISA brings together researchers advancing how we acquire, reconstruct, and understand images. Explore connections across synthetic apertures, inverse problems, and AI—from radar and sonar to cryo-EM/ET, vision-language models, and intelligent imaging systems.
+title: 2027 IEEE Conference on Computational Imaging Using Synthetic Apertures
+description: CISA 2027, June 1–3 at the University of Maryland. Research in synthetic-aperture sensing, computational imaging, inverse problems, and AI methods for imaging.
+intro: CISA covers theory, methods, and applications in synthetic-aperture and computational imaging. Its scope includes sensing, image reconstruction, inverse problems, and AI methods for imaging.
 ---
 
-Different instruments. Shared questions. CISA is a place to bring your methods, discover another perspective, and help shape what comes next in computational imaging.
+CISA addresses advances in computational imaging theory, engineering practice, and standardization. The 2027 conference will be hosted at the University of Maryland. The call for papers is issued by the University of Maryland, IEEE-USA, and the IEEE Synthetic Aperture Standards Committee.

@@ -7,12 +7,6 @@ const samples = Array.from({ length: 9 }, (_, i) => {
 ---
 
 <figure class="aperture" data-aperture>
-  <div class="aperture-topline">
-    <span class="instrument-label">
-      <span class="live-dot"></span> SYNTHETIC APERTURE
-    </span>
-    <span class="instrument-label">FIG. 01</span>
-  </div>
   <svg class="aperture-svg" viewBox="0 0 480 410" fill="none" aria-hidden="true">
     <defs>
       <pattern id="aperture-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -84,25 +78,9 @@ const samples = Array.from({ length: 9 }, (_, i) => {
     </g>
     <path d="M359 160h14v95h-14" stroke="#9CBBCA" stroke-opacity=".5" />
     <path d="M65 373h74M65 369v8m74-8v8" stroke="#95B7C5" stroke-opacity=".5" />
-    <text x="176" y="386" fill="#9BBAC8" font-size="10" font-family="monospace" letter-spacing="2">
-      MANY VIEWS. MORE INFORMATION.
-    </text>
-    <text x="35" y="23" fill="#AAC7D2" font-size="10" font-family="monospace" letter-spacing="1.5">
-      01 / ACQUIRE
-    </text>
-    <text x="281" y="23" fill="#AAC7D2" font-size="10" font-family="monospace" letter-spacing="1.5">
-      02 / RECONSTRUCT
-    </text>
-    <text x="391" y="212" fill="#ADE8DB" font-size="10" font-family="monospace" letter-spacing="1">
-      FOCUS
-    </text>
   </svg>
   <figcaption>
-    <span>
-      A wider aperture.
-      <br />
-      <strong>A clearer picture.</strong>
-    </span>
+    <span>Schematic of synthetic-aperture sampling and reconstruction.</span>
     <button
       class="aperture-replay"
       type="button"

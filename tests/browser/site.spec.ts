@@ -79,7 +79,7 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
   await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
   await expect(page.getByRole('button', { name: /Replay/ })).toBeHidden();
-  await page.getByRole('link', { name: 'Explore the program', exact: true }).click();
+  await page.getByRole('link', { name: 'Technical program', exact: true }).click();
   await expect(page.locator('#research-themes')).toBeVisible();
   await page.goto('http://127.0.0.1:4321/attend/');
   await page.getByText('Is CISA 2027 an in-person conference?', { exact: true }).click();
@@ -90,11 +90,15 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
 test('populated speaker and schedule layouts handle long content', async ({ page }) => {
   for (const route of ['/', '/speakers/', '/speakers/fixture-current/', '/program/']) {
     await page.goto(`http://127.0.0.1:4322${route}`);
-    for (const width of [360, 768, 1440]) {
+    for (const width of widths) {
       await page.setViewportSize({ width, height: 900 });
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1),
       ).toBe(false);
+      await page.screenshot({
+        path: `artifacts/screenshots/${test.info().project.name}-populated-${route.replaceAll('/', '') || 'home'}-${width}.png`,
+        fullPage: true,
+      });
     }
     expect(await page.locator('body').innerText()).not.toContain('DO_NOT_PUBLISH');
     const result = await new AxeBuilder({ page })

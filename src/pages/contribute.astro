@@ -13,53 +13,41 @@ const { Content } = await render(page);
   <PageIntro {...page.data} />
   <div class="wrap intro-actions">
     <a class="button" href={href(event.cfp)} download>
-      Download the call for papers <Icon name="download" size={18} />
+      Download the PDF <Icon name="download" size={18} />
     </a>
+    <p class="file-details">2027 call for papers · PDF · 1 page · 395 KB</p>
   </div>
   <div class="wrap page-content content-columns">
     <article class="prose">
       <Content />
-      <h2>A question about your work?</h2>
+      <h2>Research scope inquiries</h2>
       <p>
-        Tell the organizers about the imaging problem you’re exploring. Contact{' '}
+        For questions about the suitability of a contribution, contact{' '}
         <a href={`mailto:${event.email}`}>{event.email}</a>.
       </p>
       <p>
-        <a href={href('/program/#research-themes')}>Explore all six research themes →</a>
+        <a href={href('/program/#research-themes')}>Research topics</a>
       </p>
     </article>
     <aside class="sidebar-stack" aria-label="Submission information">
-      <div class="download-panel">
-        <Icon name="download" size={32} />
-        <p class="eyebrow">OFFICIAL CONFERENCE DOCUMENT</p>
-        <h2>The 2027 call for papers</h2>
-        <p>Technical scope and the invitation to College Park, in one downloadable page.</p>
-        <a class="button button-light" href={href(event.cfp)} download>
-          Download the PDF <Icon name="download" size={18} />
-        </a>
-        <p>PDF · 1 page · 395 KB</p>
-      </div>
-      <section class="notice">
+      <section class="sidebar-section">
         <h2>Submission information</h2>
         {event.submission?.confirmed ? (
           <>
-            <p>The 2027 submission portal is open.</p>
+            <p>The submission portal is open.</p>
             <a class="button" href={event.submission.url}>
               {event.submission.label}
               <Icon name="external" size={18} />
             </a>
           </>
         ) : (
-          <p>
-            The 2027 submission portal, deadlines, and manuscript instructions will be announced
-            here.
-          </p>
+          <p>The submission portal will be announced.</p>
         )}
       </section>
       {deadlines.length > 0 && (
-        <section class="notice">
-          <p class="eyebrow">IMPORTANT DATES</p>
-          <dl class="fact-list">
+        <section class="sidebar-section">
+          <h2>Important dates</h2>
+          <dl class="fact-list section-copy">
             {deadlines.map(({ data }) => (
               <div>
                 <dt>{data.title}</dt>
@@ -71,19 +59,6 @@ const { Content } = await render(page);
           </dl>
         </section>
       )}
-      <section class="notice">
-        <h2>Join us in person</h2>
-        <p>
-          {event.dateLabel}
-          <br />
-          {event.venue}
-          <br />
-          {event.city}, {event.region}
-        </p>
-        <a class="text-link" href={href('/attend/')}>
-          Plan your visit <Icon size={18} />
-        </a>
-      </section>
     </aside>
   </div>
 </Base>

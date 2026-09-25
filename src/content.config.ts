@@ -37,20 +37,17 @@ const pages = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
-    eyebrow: z.string(),
     description: z.string(),
-    intro: z.string(),
+    intro: z.string().optional(),
   }),
 });
 const themes = defineCollection({
   loader: file('./src/data/themes.yaml'),
   schema: z.object({
     title: z.string(),
-    shortTitle: z.string(),
     description: z.string(),
     examples: z.array(z.string()),
     order: z.number(),
-    icon: z.enum(['ai', 'micro', 'radar', 'wave', 'astro', 'inverse']),
   }),
 });
 const speakers = defineCollection({

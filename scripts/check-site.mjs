@@ -74,7 +74,8 @@ for (const file of htmlFiles) {
       errors.push(`${relative}: incorrect indexing policy`);
     if ($('link[rel="canonical"]').attr('href') !== from)
       errors.push(`${relative}: incorrect canonical URL`);
-    if (!$('main').text().includes('2027')) errors.push(`${relative}: missing edition`);
+    if (!$('header').text().includes('2027'))
+      errors.push(`${relative}: missing conference edition`);
     const ld = JSON.parse($('script[type="application/ld+json"]').text());
     if (ld.startDate !== '2027-06-01' || ld.endDate !== '2027-06-03')
       errors.push(`${relative}: inconsistent conference dates`);

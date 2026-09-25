@@ -3,18 +3,12 @@ import Base from '../layouts/Base.astro';
 import { href } from '../lib/urls';
 ---
 
-<Base title="Page not found" description="Find your way back to CISA 2027." noindex>
+<Base title="Page not found" description="The requested CISA page could not be found." noindex>
   <section class="wrap simple-page">
-    <p class="eyebrow">404 / A DIFFERENT PERSPECTIVE</p>
-    <h1>This page is out of view.</h1>
-    <p class="section-intro">
-      The link may have changed. You can find the program, call for papers, and attendance
-      information from the homepage.
-    </p>
-    <p style="margin-top:30px">
-      <a class="button" href={href('/')}>
-        Back to CISA 2027 →
-      </a>
+    <h1>Page not found</h1>
+    <p class="section-copy">The requested page does not exist at this address.</p>
+    <p class="section-copy">
+      <a href={href('/')}>CISA 2027 homepage</a>
     </p>
   </section>
 </Base>

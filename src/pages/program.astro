@@ -3,7 +3,6 @@ import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Themes from '../components/Themes.astro';
-import Participation from '../components/Participation.astro';
 import { event, program, speakers } from '../lib/content';
 import { href } from '../lib/urls';
 const page = (await getEntry('pages', 'program'))!;
@@ -42,15 +41,10 @@ const dateLabel = (date: string) =>
   <section class="section wrap" id="research-themes">
     <div class="section-top">
       <div>
-        <p class="eyebrow">RESEARCH CONNECTIONS</p>
-        <h2>
-          Find familiar questions
-          <br />
-          in unexpected places.
-        </h2>
+        <h2>Research topics</h2>
         <p class="section-intro">
-          These themes connect the research CISA welcomes. Confirmed sessions and tutorials are
-          listed separately below.
+          These topics describe the conference’s research scope. Sessions and tutorials are listed
+          separately when confirmed.
         </p>
       </div>
     </div>
@@ -58,8 +52,7 @@ const dateLabel = (date: string) =>
   </section>
   {highlights.length > 0 && (
     <section class="section wrap border-section">
-      <p class="eyebrow">CONFIRMED HIGHLIGHTS</p>
-      <h2>On the program.</h2>
+      <h2>Technical sessions</h2>
       {highlights.map(({ data }) => (
         <article class="schedule-entry">
           <span class="schedule-kind">{data.kind}</span>
@@ -74,8 +67,7 @@ const dateLabel = (date: string) =>
   <section class="section wrap border-section" id="tutorials">
     <div class="section-top">
       <div>
-        <p class="eyebrow">GO DEEPER</p>
-        <h2>Learn another way of seeing.</h2>
+        <h2>Tutorials</h2>
       </div>
     </div>
     {tutorials.length ? (
@@ -89,17 +81,13 @@ const dateLabel = (date: string) =>
         </article>
       ))
     ) : (
-      <div class="notice">
-        <h3>Tutorials to be announced</h3>
-        <p>Confirmed 2027 tutorials, presenters, and participation details will appear here.</p>
-      </div>
+      <p class="pending">Tutorials will be announced.</p>
     )}
   </section>
   <section class="section wrap border-section" id="schedule">
     <div class="section-top">
       <div>
-        <p class="eyebrow">{event.dateLabel}</p>
-        <h2>Three days in College Park.</h2>
+        <h2>Schedule</h2>
       </div>
     </div>
     {dates.length ? (
@@ -117,8 +105,8 @@ const dateLabel = (date: string) =>
                     </time>
                   </div>
                   <div>
-                    <div class="schedule-kind">{data.kind}</div>
                     <h4>{data.title}</h4>
+                    <p class="schedule-kind">{data.kind}</p>
                     <p>{data.description}</p>
                     {data.speakerIds.length > 0 && (
                       <p>
@@ -140,14 +128,9 @@ const dateLabel = (date: string) =>
         ))}
       </div>
     ) : (
-      <div class="notice">
-        <h3>The daily schedule is on its way.</h3>
-        <p>
-          The full schedule will be published here as the program is confirmed. All scheduled times
-          will be shown in the conference’s local timezone.
-        </p>
-      </div>
+      <p class="pending">
+        The schedule will be announced. Times will be shown in the conference’s local timezone.
+      </p>
     )}
   </section>
-  <Participation />
 </Base>

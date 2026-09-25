@@ -82,7 +82,17 @@ Duplicate the YAML example in `src/content/organizers/`, then set the verified `
 
 ## Shared event information
 
-Edit the event YAML once to update dates, venue, contact address, or the PDF location. The header information, footer, attendance details, event metadata, and calendar download use this source. Dates use quoted ISO strings. The calendar download covers all conference days without implying that conference sessions last all day.
+Edit the event YAML once to update dates, venue, contact address, or the PDF location. The homepage, attendance details, contact links, event metadata, and calendar download use this source. Dates use quoted ISO strings. The calendar download covers all conference days without implying that conference sessions last all day.
+
+## Copy and page structure
+
+Each heading identifies its subject; each sentence provides information. Use literal headings such as “Technical program”, “Speakers”, and “Important dates”. Describe research through methods and applications. Keep VLMs, agentic imaging workflows, and cryo-EM/ET within the research scope without presenting them as confirmed sessions.
+
+Avoid slogans, rhetorical questions, generic invitations, decorative labels above headings, numbered topic labels, and announcement badges. A pending notice needs one sentence, such as “Speakers will be announced.” Do not add a promotional panel to fill an empty page.
+
+Page Markdown has `title`, `description`, and an optional `intro`. Omit `intro` when it repeats the title or body. Supporting page titles should be literal, while the homepage heading uses the official name from the shared event record. Research topics and their plain-text examples are maintained in `src/data/themes.yaml`.
+
+Use ordinary links for navigation. Buttons are reserved for submission, registration, downloads, and interactive controls. Speaker roles and session types are factual metadata, displayed as ordinary text alongside their associated content.
 
 ## Branding and images
 

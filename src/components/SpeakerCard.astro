@@ -2,11 +2,11 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { href } from '../lib/urls';
-import Icon from './Icon.astro';
 interface Props {
   speaker: CollectionEntry<'speakers'>;
+  headingLevel?: 'h2' | 'h3';
 }
-const { speaker } = Astro.props;
+const { speaker, headingLevel: Heading = 'h3' } = Astro.props;
 const { data } = speaker;
 ---
 
@@ -23,13 +23,10 @@ const { data } = speaker;
       loading="lazy"
     />
   )}
-  <p class="eyebrow">{data.role}</p>
-  <h3>
-    <a href={href(`/speakers/${speaker.id}/`)}>
-      {data.name}
-      <Icon name="external" size={22} />
-    </a>
-  </h3>
+  <Heading>
+    <a href={href(`/speakers/${speaker.id}/`)}>{data.name}</a>
+  </Heading>
   <p class="speaker-affiliation">{data.affiliation}</p>
+  <p class="speaker-role">{data.role}</p>
   {data.talkTitle && <p class="speaker-talk">{data.talkTitle}</p>}
 </article>

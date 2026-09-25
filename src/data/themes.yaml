@@ -1,42 +1,30 @@
 - id: ai-for-imaging
   title: AI for imaging
-  shortTitle: AI & imaging
-  description: Bring new intelligence to how we acquire, reconstruct, and understand images.
-  examples: [Vision-language models, Generative reconstruction, Agentic imaging workflows]
+  description: AI methods for image acquisition, reconstruction, and interpretation.
+  examples: [Vision-language models (VLMs), Generative reconstruction, Agentic imaging workflows]
   order: 1
-  icon: ai
 - id: microscopy
   title: Microscopy and cryo-EM/ET
-  shortTitle: Microscopy & cryo-EM/ET
-  description: Find common ground in structural imaging, limited measurements, and computational reconstruction.
+  description: Computational methods for microscopic and structural imaging.
   examples: [Computational microscopy, Cryo-electron microscopy, Cryo-electron tomography]
   order: 2
-  icon: micro
 - id: remote-sensing
   title: Remote sensing, radar, and sonar
-  shortTitle: Radar, sonar & remote sensing
-  description: Connect the foundations of synthetic apertures with new sensing systems and environmental applications.
-  examples: [SAR & SAS, Earth observation, Environmental monitoring]
+  description: Synthetic-aperture sensing systems and their applications in remote observation.
+  examples: [Synthetic-aperture radar and sonar, Earth observation, Environmental monitoring]
   order: 3
-  icon: radar
 - id: optical-wave-imaging
   title: Optical and wave imaging
-  shortTitle: Optical & wave imaging
-  description: Explore how wave physics and computation expand what an imaging system can resolve.
+  description: Image formation and reconstruction using optical and wave-based measurements.
   examples: [Fourier ptychography, Holography, Wave-based reconstruction]
   order: 4
-  icon: wave
 - id: medical-astronomical
   title: Medical and astronomical imaging
-  shortTitle: From medicine to astronomy
-  description: Exchange ideas across scales, from imaging inside the body to observing the distant universe.
-  examples: [MRI & ultrasound, Computed tomography, Radio astronomy]
+  description: Computational methods for medical imaging and astronomical observation.
+  examples: [MRI and ultrasound, Computed tomography, Radio astronomy]
   order: 5
-  icon: astro
 - id: inverse-problems
   title: Inverse problems and reconstruction
-  shortTitle: Inverse problems & reconstruction
-  description: Advance the mathematical and physical ideas that turn incomplete measurements into reliable images.
-  examples: [Sampling & optimization, Physics-based models, Uncertainty quantification]
+  description: Mathematical and physical methods for recovering images from incomplete measurements.
+  examples: [Sampling and optimization, Physics-based models, Uncertainty quantification]
   order: 6
-  icon: inverse
