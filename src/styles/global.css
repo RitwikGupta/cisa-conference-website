@@ -317,13 +317,31 @@
     min-height: 44px;
   }
   .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 360px;
-    gap: 64px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     padding-block: 56px;
-    align-items: center;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      rgb(247 248 245 / 0.6),
+      rgb(247 248 245 / 0.92) 12%,
+      rgb(247 248 245 / 0.96) 42%,
+      rgb(247 248 245 / 0.85) 55%,
+      rgb(247 248 245 / 0.15) 78%,
+      rgb(247 248 245 / 0)
+    );
   }
   .hero-copy {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
     min-width: 0;
   }
   .hero h1 {
@@ -355,63 +373,40 @@
     background: var(--pale);
     border-color: var(--teal);
   }
-  .hero-artwork {
-    position: relative;
-    isolation: isolate;
-    min-width: 0;
-    width: 100%;
-    max-width: 360px;
-  }
-  .hero-artwork::before,
-  .hero-artwork::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    pointer-events: none;
-    inset: -22px -16px -22px -20px;
-    border: 1px solid rgb(8 127 131 / 0.15);
-    border-right-color: transparent;
-    border-radius: 50%;
-  }
-  .hero-artwork::after {
-    inset: -42px -26px -42px -32px;
-    border-color: rgb(8 127 131 / 0.09);
-    border-right-color: transparent;
-  }
   .aperture {
-    position: relative;
-    background: var(--navy);
-    color: var(--paper);
-    border-radius: 3px;
-    padding: 18px 18px 48px;
-    width: 100%;
-    overflow: hidden;
-    min-width: 0;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
   }
   .aperture-svg {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
+    height: 100%;
+    opacity: 0.9;
   }
   .aperture-toggle {
     position: absolute;
-    right: 10px;
-    bottom: 10px;
+    z-index: 3;
+    right: max(48px, calc((100% - var(--max)) / 2));
+    bottom: 16px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 44px;
     height: 44px;
-    border: 1px solid #526c77;
+    pointer-events: auto;
+    border: 1px solid #b1c9c1;
     border-radius: 3px;
-    background: var(--navy);
-    color: #c7dedf;
+    background: var(--paper);
+    color: #06676b;
   }
   .aperture-toggle:hover {
-    background: #1c3b4d;
-    color: white;
+    background: var(--pale);
+    color: var(--ink);
   }
   .aperture-toggle:focus-visible {
-    outline-color: #9ff4df;
     outline-offset: 3px;
   }
   .aperture-toggle .play-icon,
@@ -680,29 +675,29 @@
     padding-block: 36px;
   }
   .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+  }
+  .footer-brand {
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(140px, 0.8fr) minmax(0, 1fr);
-    gap: 40px;
-    align-items: start;
+    min-width: 0;
+    grid-template-columns: auto minmax(0, 48ch);
+    column-gap: 28px;
+    row-gap: 4px;
+    align-items: center;
+  }
+  .footer-brand .brand-link {
+    grid-row: span 2;
   }
   .footer-brand p {
     font-size: 14px;
     color: var(--muted);
-    max-width: 38ch;
-    margin-top: 16px;
-  }
-  .footer-links {
-    display: grid;
-    gap: 2px;
-    font-size: 16px;
-  }
-  .footer-links a {
-    width: fit-content;
-    display: inline-flex;
-    align-items: center;
-    min-height: 36px;
   }
   .footer-email {
+    flex-shrink: 0;
+    max-width: 100%;
     font-size: 16px;
     overflow-wrap: anywhere;
     min-height: 44px;
@@ -836,11 +831,6 @@
   .affiliation h3 {
     font-size: 20px;
   }
-  .affiliation p {
-    font-size: 14px;
-    color: var(--muted);
-    margin-top: 12px;
-  }
   .fact-list {
     max-width: 65ch;
   }
@@ -891,21 +881,11 @@
     .primary-nav {
       gap: 22px;
     }
-    .hero {
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 40px;
+    .aperture-toggle {
+      right: 32px;
     }
     .content-columns {
       gap: 40px;
-    }
-    .footer-inner {
-      grid-template-columns: minmax(0, 1.5fr) 1fr;
-    }
-    .footer-email {
-      grid-column: 2;
-    }
-    .footer-brand {
-      grid-row: span 2;
     }
   }
   @media (max-width: 800px) {
@@ -954,16 +934,25 @@
     .js .primary-nav:not(.is-open) {
       display: none;
     }
-    .hero {
-      grid-template-columns: 1fr;
-      gap: 32px;
+    .hero::after {
+      background: linear-gradient(
+        180deg,
+        rgb(247 248 245 / 0.94),
+        rgb(247 248 245 / 0.8) 60%,
+        rgb(247 248 245 / 0.55)
+      );
     }
-    .hero-artwork {
-      justify-self: center;
+    .aperture-svg {
+      inset: auto -100px 20px auto;
+      width: 960px;
+      max-width: none;
+      height: 420px;
+      opacity: 0.5;
     }
-    .hero-artwork::before,
-    .hero-artwork::after {
-      display: none;
+    .footer-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
     }
     .content-columns {
       grid-template-columns: 1fr;
@@ -1008,8 +997,9 @@
     .hero-actions {
       flex-direction: column;
     }
-    .aperture-svg {
-      max-height: 235px;
+    .aperture-toggle {
+      right: 20px;
+      bottom: 36px;
     }
     .program-research {
       margin-top: 28px;
@@ -1032,21 +1022,17 @@
       flex-direction: column;
       align-items: flex-start;
     }
-    .footer-inner {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    .footer-email {
-      grid-column: auto;
-    }
     .footer-brand {
+      grid-template-columns: 1fr;
+    }
+    .footer-brand .brand-link {
       grid-row: auto;
+      margin-bottom: 8px;
     }
-    .footer-links {
-      grid-template-columns: 1fr 1fr;
-    }
-    .footer-links a {
-      min-height: 44px;
+  }
+  @media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
+    .js .hero-actions {
+      padding-right: 60px;
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -1066,7 +1052,8 @@
   @media print {
     .site-header,
     .site-footer,
-    .hero-artwork,
+    .aperture,
+    .hero::after,
     .skip-link {
       display: none;
     }

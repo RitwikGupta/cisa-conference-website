@@ -94,8 +94,10 @@ Page Markdown has `title`, `description`, and an optional `intro`. Omit `intro` 
 
 Use ordinary links for navigation. Buttons are used for submission, registration, downloads, and interactive controls. The homepage’s Technical program and Call for papers navigation links are an intentional exception: they use filled and outlined button styles respectively. Speaker roles and session types are factual metadata, displayed as ordinary text alongside their associated content.
 
+The footer contains conference identity, copyright, and the contact email; keep navigation in the header. Present conference affiliations as logos and names without repeating the call-for-papers attribution or adding explanatory labels.
+
 ## Branding and images
 
-Design tokens live at the start of `src/styles/global.css`. The SVG aperture illustration is in `src/components/Aperture.astro`; no raster or video is needed. The 12-second sampling sweep repeats continuously while visible. Retain the resolved static image for reduced motion and JavaScript-disabled visits, the accessible pause/resume control, and automatic pauses when offscreen or in a hidden tab. Automatic pauses must not override a visitor’s manual pause.
+Design tokens live at the start of `src/styles/global.css`. The full-width SVG aperture background is in `src/components/Aperture.astro`; no raster or video is needed. Keep it behind the homepage introduction on warm white, with a feathered overlay protecting the text. On mobile it stays a faint cropped background, without a separate illustration block or added hero height. Keep the pause control clear of the buttons and allow pointer events only on the control. The 12-second sampling sweep repeats continuously while visible. Retain the resolved static image for reduced motion and JavaScript-disabled visits, the accessible pause/resume control, and automatic pauses when offscreen or in a hidden tab. Automatic pauses must not override a visitor’s manual pause.
 
 For a new edition, update the current event selection in `src/lib/content.ts`, the wordmark year, page copy, calendar UID, and metadata tests together. This release intentionally does not provide an automatic annual rollover.

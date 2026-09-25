@@ -12,26 +12,26 @@ const featured = speakers.filter((speaker) => speaker.data.featured).slice(0, 3)
 ---
 
 <Base {...home.data} page="home">
-  <section class="hero wrap">
-    <div class="hero-copy">
-      <h1>{event.name}</h1>
-      <p class="event-details">
-        <time datetime={event.startDate}>{event.dateLabel}</time> · {event.venue} · {event.city},{' '}
-        {event.region}
-      </p>
-      <p class="hero-description">{home.data.intro}</p>
-      <div class="hero-actions">
-        <a class="button" href={href('/program/')}>
-          Technical program
-        </a>
-        <a class="button button-outline" href={href('/contribute/')}>
-          Call for papers
-        </a>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <h1>{event.name}</h1>
+        <p class="event-details">
+          <time datetime={event.startDate}>{event.dateLabel}</time> · {event.venue} · {event.city},{' '}
+          {event.region}
+        </p>
+        <p class="hero-description">{home.data.intro}</p>
+        <div class="hero-actions">
+          <a class="button" href={href('/program/')}>
+            Technical program
+          </a>
+          <a class="button button-outline" href={href('/contribute/')}>
+            Call for papers
+          </a>
+        </div>
       </div>
     </div>
-    <div class="hero-artwork">
-      <Aperture />
-    </div>
+    <Aperture />
   </section>
   <section class="section wrap border-section" aria-labelledby="program-heading">
     <h2 id="program-heading">Technical program and speakers</h2>

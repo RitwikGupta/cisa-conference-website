@@ -8,6 +8,11 @@ for (const route of routes) {
   test(`${route} is readable across all five widths and accessible`, async ({ page }) => {
     await page.goto(route);
     await expect(page.locator('h1')).toHaveCount(1);
+    await expect(page.locator('footer nav')).toHaveCount(0);
+    await expect(page.locator('footer a[href="mailto:info@cisa-conference.org"]')).toBeVisible();
+    await expect(page.locator('main')).not.toContainText(
+      /named in the 2027 call for papers|host institution|is issued by/i,
+    );
     for (const width of widths) {
       await page.setViewportSize({ width, height: 900 });
       await expect(page.locator('main')).toBeVisible();
@@ -51,6 +56,48 @@ test('keyboard skip link reaches main content', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#main$/);
+});
+
+test('hero background spans the section and leaves links and playback accessible', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const hero = page.locator('.hero');
+  const art = page.locator('[data-aperture]');
+  const control = art.getByRole('button', { name: 'Pause aperture animation' });
+  await expect(control).toBeVisible();
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 900 });
+    const heroBox = (await hero.boundingBox())!;
+    const artBox = (await art.boundingBox())!;
+    const controlBox = (await control.boundingBox())!;
+    expect(heroBox.x).toBe(0);
+    expect(heroBox.width).toBe(width);
+    expect(artBox).toEqual(heroBox);
+    expect(controlBox.width).toBeGreaterThanOrEqual(44);
+    expect(controlBox.height).toBeGreaterThanOrEqual(44);
+    for (const link of await hero.getByRole('link').all()) {
+      const box = (await link.boundingBox())!;
+      const overlaps =
+        box.x < controlBox.x + controlBox.width &&
+        box.x + box.width > controlBox.x &&
+        box.y < controlBox.y + controlBox.height &&
+        box.y + box.height > controlBox.y;
+      expect(overlaps, `hero link overlaps playback at ${width}px`).toBe(false);
+      expect(
+        await link.evaluate((element) => {
+          const box = element.getBoundingClientRect();
+          return element.contains(
+            document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2),
+          );
+        }),
+      ).toBe(true);
+    }
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await hero.getByRole('link', { name: 'Call for papers', exact: true }).click();
+  await expect(page).toHaveURL(/\/contribute\/$/);
 });
 
 test('artwork loops, pauses by keyboard, and respects reduced motion', async ({ page }) => {

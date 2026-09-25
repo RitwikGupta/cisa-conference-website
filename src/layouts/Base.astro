@@ -110,11 +110,6 @@ const schema = {
           <p>IEEE Conference on Computational Imaging Using Synthetic Apertures</p>
           <p>© {event.edition} CISA Conference</p>
         </div>
-        <nav class="footer-links" aria-label="Footer navigation">
-          {nav.map((item) => (
-            <a href={href(item.path)}>{item.label}</a>
-          ))}
-        </nav>
         <a class="footer-email" href={`mailto:${event.email}`}>
           {event.email}
         </a>
