@@ -218,14 +218,14 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
   await context.close();
 });
 
-test('populated speaker and schedule layouts handle long content', async ({ page }) => {
-  for (const route of [
-    '/',
-    '/speakers/',
-    '/speakers/fixture-current/',
-    '/program/',
-    '/contribute/',
-  ]) {
+for (const route of [
+  '/',
+  '/speakers/',
+  '/speakers/fixture-current/',
+  '/program/',
+  '/contribute/',
+]) {
+  test(`populated ${route} handles long content across all five widths`, async ({ page }) => {
     await page.goto(`http://127.0.0.1:4322${route}`);
     for (const width of widths) {
       await page.setViewportSize({ width, height: 900 });
@@ -242,8 +242,8 @@ test('populated speaker and schedule layouts handle long content', async ({ page
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
       .analyze();
     expect(result.violations).toEqual([]);
-  }
-});
+  });
+}
 
 test('200% page-zoom equivalent reflow retains content and controls', async ({ browser }) => {
   // A 1024px display at 200% browser zoom exposes 512 CSS pixels. CSS zoom on
