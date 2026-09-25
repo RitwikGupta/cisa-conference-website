@@ -305,17 +305,6 @@
     align-items: center;
     min-height: 44px;
   }
-  .inline-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 28px;
-    margin-top: 20px;
-  }
-  .inline-links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
   .hero {
     position: relative;
     isolation: isolate;
@@ -990,9 +979,6 @@
     }
     .hero-description {
       margin-top: 20px;
-    }
-    .inline-links {
-      gap: 4px 24px;
     }
     .hero-actions {
       flex-direction: column;
