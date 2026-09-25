@@ -1,0 +1,11 @@
+edition: 2027
+status: draft
+source: Editing example only; replace with organizer confirmation before publishing.
+title: Example session — not an announcement
+kind: session
+description: Replace this with a confirmed session description.
+date: '2027-06-01'
+start: '09:00'
+end: '10:00'
+speakerIds: []
+order: 1

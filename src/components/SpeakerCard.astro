@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { href } from '../lib/urls';
+import Icon from './Icon.astro';
+interface Props {
+  speaker: CollectionEntry<'speakers'>;
+}
+const { speaker } = Astro.props;
+const { data } = speaker;
+---
+
+<article class="speaker-card">
+  {data.portrait && (
+    <Image
+      src={data.portrait}
+      alt={data.name}
+      widths={[320, 480, 640]}
+      sizes="(max-width: 639px) 100vw, 33vw"
+      width={480}
+      height={480}
+      fit="cover"
+      loading="lazy"
+    />
+  )}
+  <p class="eyebrow">{data.role}</p>
+  <h3>
+    <a href={href(`/speakers/${speaker.id}/`)}>
+      {data.name}
+      <Icon name="external" size={22} />
+    </a>
+  </h3>
+  <p class="speaker-affiliation">{data.affiliation}</p>
+  {data.talkTitle && <p class="speaker-talk">{data.talkTitle}</p>}
+</article>

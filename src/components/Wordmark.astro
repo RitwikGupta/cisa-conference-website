@@ -1,0 +1,20 @@
+---
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<span class:list={['wordmark', { compact }]}>
+  <svg viewBox="0 0 40 40" width="36" height="36" fill="none" aria-hidden="true">
+    <path
+      d="M28 3A19 19 0 0 0 28 37M29 9a13 13 0 0 0 0 22M30 15a7 7 0 0 0 0 10"
+      stroke="currentColor"
+      stroke-width="2.5"
+    />
+    <circle cx="30" cy="20" r="2.4" fill="currentColor" />
+  </svg>
+  <span>
+    CISA <span class="wordmark-year">2027</span>
+  </span>
+</span>

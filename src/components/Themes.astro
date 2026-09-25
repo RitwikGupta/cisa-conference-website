@@ -1,0 +1,40 @@
+---
+import { themes } from '../lib/content';
+import { href } from '../lib/urls';
+import Icon from './Icon.astro';
+interface Props {
+  expanded?: boolean;
+}
+const { expanded = false } = Astro.props;
+---
+
+<div class:list={['theme-grid', { 'theme-grid-expanded': expanded }]}>
+  {themes.map(({ id, data }, index) => (
+    <article class="theme" id={expanded ? id : undefined}>
+      <div class="theme-number">
+        <span>0{index + 1}</span>
+        <Icon name={data.icon} size={30} />
+      </div>
+      <div class="theme-content">
+        <h3>
+          {expanded ? (
+            data.title
+          ) : (
+            <a href={href(`/program/#${id}`)}>
+              {data.shortTitle}
+              <Icon name="external" size={22} />
+            </a>
+          )}
+        </h3>
+        <p>{data.description}</p>
+        {expanded && (
+          <ul class="theme-tags">
+            {data.examples.map((example) => (
+              <li>{example}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </article>
+  ))}
+</div>

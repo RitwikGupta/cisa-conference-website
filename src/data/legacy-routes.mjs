@@ -1,0 +1,18 @@
+export const legacyRoutes = {
+  topics: '/program/#research-themes',
+  climate: '/program/#remote-sensing',
+  'climate-change': '/program/#remote-sensing',
+  tutorials: '/program/#tutorials',
+  keynotes: '/speakers/',
+  submissions: '/contribute/',
+  'submissions/templates': '/contribute/',
+  'submissions/posters': '/contribute/',
+  'submissions/tci': '/contribute/',
+  registration: '/attend/',
+  organizers: '/about/#organizers',
+  'organizers/kidder': '/about/#organizers',
+  'organizers/conde': '/about/#organizers',
+  'organizers/mason': '/about/#organizers',
+  'organizers/vouras': '/about/#organizers',
+  exhibits: '/about/#support-cisa',
+};

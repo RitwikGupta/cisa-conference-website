@@ -1,0 +1,118 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Icon from '../components/Icon.astro';
+import Participation from '../components/Participation.astro';
+import { event } from '../lib/content';
+const page = (await getEntry('pages', 'attend'))!;
+const { Content } = await render(page);
+---
+
+<Base {...page.data} page="attend">
+  <PageIntro {...page.data} />
+  <div class="wrap intro-actions hero-event">
+    <span>
+      <Icon name="calendar" size={18} />
+      <time datetime={event.startDate}>{event.dateLabel}</time>
+    </span>
+    <span>
+      <Icon name="pin" size={18} />
+      {event.venue} · {event.city}, {event.region}
+    </span>
+  </div>
+  <div class="wrap page-content content-columns">
+    <div class="prose">
+      <Content />
+      <p>
+        <a href={`mailto:${event.email}`}>{event.email}</a>
+      </p>
+    </div>
+    <aside class="sidebar-stack" aria-label="Conference details">
+      <section class="notice">
+        <dl class="fact-list">
+          <div>
+            <dt>When</dt>
+            <dd>
+              <time datetime={event.startDate}>{event.dateLabel}</time>
+            </dd>
+          </div>
+          <div>
+            <dt>Where</dt>
+            <dd>
+              {event.venue}
+              <br />
+              {event.city}, {event.region}
+            </dd>
+          </div>
+          <div>
+            <dt>Format</dt>
+            <dd>In person</dd>
+          </div>
+        </dl>
+      </section>
+      <section class="download-panel">
+        <Icon name="calendar" size={32} />
+        <h2>Make room for CISA.</h2>
+        {event.registration?.confirmed ? (
+          <>
+            <p>Registration for CISA 2027 is open.</p>
+            <a class="button button-light" href={event.registration.url}>
+              {event.registration.label}
+              <Icon name="external" size={18} />
+            </a>
+          </>
+        ) : (
+          <p>
+            Registration details and rates will be announced here. Save the dates: {event.dateLabel}
+            .
+          </p>
+        )}
+        <a
+          class="button button-light"
+          href={`${import.meta.env.BASE_URL}downloads/cisa-2027.ics`}
+          download
+        >
+          Add to your calendar <Icon name="download" size={18} />
+        </a>
+      </section>
+    </aside>
+  </div>
+  <section class="section wrap border-section">
+    <div class="section-top">
+      <div>
+        <p class="eyebrow">BEFORE YOU ARRIVE</p>
+        <h2>A few practical details.</h2>
+      </div>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Is CISA 2027 an in-person conference?</summary>
+        <p>
+          Yes. The 2027 call for papers specifies an in-person event at the University of Maryland.
+          Authors must present live for their papers to be published in IEEE Xplore.
+        </p>
+      </details>
+      <details>
+        <summary>Where on campus will the conference take place?</summary>
+        <p>The building, rooms, and arrival instructions will be announced here once confirmed.</p>
+      </details>
+      <details>
+        <summary>When can I book registration and conference hotels?</summary>
+        <p>
+          Registration and recommended accommodation details will be published when confirmed. The
+          previous website includes hotel information from older editions, so use the 2027
+          information on this page when it becomes available.
+        </p>
+      </details>
+      <details>
+        <summary>Who can I contact about accessibility or travel questions?</summary>
+        <p>
+          Email the organizers at <a href={`mailto:${event.email}`}>{event.email}</a> with your
+          questions or access requirements.
+        </p>
+      </details>
+    </div>
+  </section>
+  <Participation />
+</Base>

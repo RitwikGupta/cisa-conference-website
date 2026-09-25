@@ -1,0 +1,31 @@
+---
+import { legacyRoutes } from '../data/legacy-routes.mjs';
+import { href, absolute } from '../lib/urls';
+export function getStaticPaths() {
+  return Object.entries(legacyRoutes).map(([legacy, target]) => ({
+    params: { legacy },
+    props: { target },
+  }));
+}
+const { target } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>This CISA page has moved</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta http-equiv="refresh" content={`0;url=${href(target)}`} />
+    <link rel="canonical" href={absolute(target)} />
+  </head>
+  <body>
+    <main>
+      <h1>This CISA page has moved.</h1>
+      <p>
+        <a href={href(target)}>Continue to the updated CISA 2027 page.</a>
+      </p>
+    </main>
+  </body>
+</html>

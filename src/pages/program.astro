@@ -1,0 +1,153 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Themes from '../components/Themes.astro';
+import Participation from '../components/Participation.astro';
+import { event, program, speakers } from '../lib/content';
+import { href } from '../lib/urls';
+const page = (await getEntry('pages', 'program'))!;
+const { Content } = await render(page);
+const scheduled = program
+  .filter((item) => item.data.date && item.data.start)
+  .sort((a, b) => `${a.data.date}${a.data.start}`.localeCompare(`${b.data.date}${b.data.start}`));
+const dates = [...new Set(scheduled.map((item) => item.data.date!))];
+const tutorials = program.filter((item) => item.data.kind === 'tutorial');
+const highlights = program.filter((item) => !item.data.start && item.data.kind !== 'tutorial');
+const dateLabel = (date: string) =>
+  new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', {
+    timeZone: event.timezone,
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
+---
+
+<Base {...page.data} page="program">
+  <PageIntro {...page.data} />
+  <div class="wrap">
+    <div class="notice">
+      <div class="prose">
+        {program.length ? (
+          <p>
+            The confirmed program is listed below. Session times are local to College Park (
+            {event.timezone}).
+          </p>
+        ) : (
+          <Content />
+        )}
+      </div>
+    </div>
+  </div>
+  <section class="section wrap" id="research-themes">
+    <div class="section-top">
+      <div>
+        <p class="eyebrow">RESEARCH CONNECTIONS</p>
+        <h2>
+          Find familiar questions
+          <br />
+          in unexpected places.
+        </h2>
+        <p class="section-intro">
+          These themes connect the research CISA welcomes. Confirmed sessions and tutorials are
+          listed separately below.
+        </p>
+      </div>
+    </div>
+    <Themes expanded />
+  </section>
+  {highlights.length > 0 && (
+    <section class="section wrap border-section">
+      <p class="eyebrow">CONFIRMED HIGHLIGHTS</p>
+      <h2>On the program.</h2>
+      {highlights.map(({ data }) => (
+        <article class="schedule-entry">
+          <span class="schedule-kind">{data.kind}</span>
+          <div>
+            <h3>{data.title}</h3>
+            <p>{data.description}</p>
+          </div>
+        </article>
+      ))}
+    </section>
+  )}
+  <section class="section wrap border-section" id="tutorials">
+    <div class="section-top">
+      <div>
+        <p class="eyebrow">GO DEEPER</p>
+        <h2>Learn another way of seeing.</h2>
+      </div>
+    </div>
+    {tutorials.length ? (
+      tutorials.map(({ data }) => (
+        <article class="schedule-entry">
+          <span class="schedule-kind">Tutorial</span>
+          <div>
+            <h3>{data.title}</h3>
+            <p>{data.description}</p>
+          </div>
+        </article>
+      ))
+    ) : (
+      <div class="notice">
+        <h3>Tutorials to be announced</h3>
+        <p>Confirmed 2027 tutorials, presenters, and participation details will appear here.</p>
+      </div>
+    )}
+  </section>
+  <section class="section wrap border-section" id="schedule">
+    <div class="section-top">
+      <div>
+        <p class="eyebrow">{event.dateLabel}</p>
+        <h2>Three days in College Park.</h2>
+      </div>
+    </div>
+    {dates.length ? (
+      <div class="schedule">
+        {dates.map((date) => (
+          <section class="schedule-day">
+            <h3>{dateLabel(date)}</h3>
+            {scheduled
+              .filter((item) => item.data.date === date)
+              .map(({ data }) => (
+                <article class="schedule-entry">
+                  <div>
+                    <time datetime={`${data.date}T${data.start}`}>
+                      {data.start}–{data.end}
+                    </time>
+                  </div>
+                  <div>
+                    <div class="schedule-kind">{data.kind}</div>
+                    <h4>{data.title}</h4>
+                    <p>{data.description}</p>
+                    {data.speakerIds.length > 0 && (
+                      <p>
+                        {data.speakerIds.map((id, index) => (
+                          <>
+                            {index > 0 && ' · '}
+                            <a href={href(`/speakers/${id}/`)}>
+                              {speakers.find((speaker) => speaker.id === id)!.data.name}
+                            </a>
+                          </>
+                        ))}
+                      </p>
+                    )}
+                    {data.location && <p>{data.location}</p>}
+                  </div>
+                </article>
+              ))}
+          </section>
+        ))}
+      </div>
+    ) : (
+      <div class="notice">
+        <h3>The daily schedule is on its way.</h3>
+        <p>
+          The full schedule will be published here as the program is confirmed. All scheduled times
+          will be shown in the conference’s local timezone.
+        </p>
+      </div>
+    )}
+  </section>
+  <Participation />
+</Base>

@@ -1,0 +1,31 @@
+---
+import { event } from '../lib/content';
+import { href } from '../lib/urls';
+import Icon from './Icon.astro';
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<section class:list={['participation', { 'participation-compact': compact }]}>
+  <div class="wrap participation-inner">
+    <div>
+      <p class="eyebrow">YOUR NEXT PERSPECTIVE STARTS HERE</p>
+      <h2>
+        Bring a question.
+        <br />
+        Make a connection.
+      </h2>
+    </div>
+    <div class="participation-copy">
+      <p>Share your work with a community looking at imaging from every angle.</p>
+      <a class="button button-light" href={href('/contribute/')}>
+        Read the call for papers <Icon />
+      </a>
+      <a class="quiet-link" href={`mailto:${event.email}`}>
+        Get in touch <Icon name="external" size={18} />
+      </a>
+    </div>
+  </div>
+</section>

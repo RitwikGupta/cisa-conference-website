@@ -1,0 +1,153 @@
+---
+import Icon from './Icon.astro';
+const samples = Array.from({ length: 9 }, (_, i) => {
+  const angle = ((-75 + i * 18.75) * Math.PI) / 180;
+  return { x: 178 - Math.cos(angle) * 120, y: 208 + Math.sin(angle) * 153 };
+});
+---
+
+<figure class="aperture" data-aperture>
+  <div class="aperture-topline">
+    <span class="instrument-label">
+      <span class="live-dot"></span> SYNTHETIC APERTURE
+    </span>
+    <span class="instrument-label">FIG. 01</span>
+  </div>
+  <svg class="aperture-svg" viewBox="0 0 480 410" fill="none" aria-hidden="true">
+    <defs>
+      <pattern id="aperture-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+        <circle cx="1" cy="1" r=".65" fill="#8BADBE" opacity=".27" />
+      </pattern>
+      <radialGradient id="point-glow">
+        <stop stop-color="#83F3DC" stop-opacity=".45" />
+        <stop offset="1" stop-color="#83F3DC" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient
+        id="beam-gradient"
+        x1="60"
+        y1="200"
+        x2="366"
+        y2="200"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stop-color="#83F3DC" stop-opacity=".12" />
+        <stop offset="1" stop-color="#83F3DC" stop-opacity=".65" />
+      </linearGradient>
+    </defs>
+    <rect width="480" height="410" fill="url(#aperture-grid)" />
+    <path d="M28 207h419M323 38v325" stroke="#98B7C6" stroke-opacity=".2" stroke-dasharray="3 7" />
+    <path d="M145 53Q-14 207 145 361" stroke="#9ADCCF" stroke-opacity=".65" stroke-width="1.4" />
+    <path d="M137 37 146 53l-17 1M129 359l17 2-9 15" stroke="#9ADCCF" stroke-opacity=".65" />
+    {samples.map((sample, i) => (
+      <g class="aperture-sample" style={`--sample:${i}`}>
+        <path
+          class="aperture-ray"
+          d={`M${sample.x} ${sample.y}Q214 ${sample.y} 323 178`}
+          stroke="url(#beam-gradient)"
+        />
+        <path
+          class="aperture-ray secondary-ray"
+          d={`M${sample.x} ${sample.y}Q214 ${sample.y} 323 236`}
+          stroke="url(#beam-gradient)"
+          stroke-opacity=".7"
+        />
+        <circle
+          cx={sample.x}
+          cy={sample.y}
+          r="8"
+          fill="#142F41"
+          stroke="#73CEBB"
+          stroke-opacity=".35"
+        />
+        <circle class="sample-core" cx={sample.x} cy={sample.y} r="2.7" fill="#9FF4DF" />
+      </g>
+    ))}
+    <g class="aperture-focus">
+      {[178, 236].map((y) => (
+        <g>
+          <circle cx="323" cy={y} r="49" fill="url(#point-glow)" />
+          {[13, 23, 34].map((r, i) => (
+            <ellipse
+              cx="323"
+              cy={y}
+              rx={r}
+              ry={r * 0.65}
+              stroke="#8AE3D3"
+              stroke-opacity={0.45 - i * 0.12}
+              stroke-width=".7"
+            />
+          ))}
+          <ellipse cx="323" cy={y} rx="6" ry="4" fill="#BAFFEC" />
+          <circle cx="323" cy={y} r="2" fill="white" />
+        </g>
+      ))}
+    </g>
+    <path d="M359 160h14v95h-14" stroke="#9CBBCA" stroke-opacity=".5" />
+    <path d="M65 373h74M65 369v8m74-8v8" stroke="#95B7C5" stroke-opacity=".5" />
+    <text x="176" y="386" fill="#9BBAC8" font-size="10" font-family="monospace" letter-spacing="2">
+      MANY VIEWS. MORE INFORMATION.
+    </text>
+    <text x="35" y="23" fill="#AAC7D2" font-size="10" font-family="monospace" letter-spacing="1.5">
+      01 / ACQUIRE
+    </text>
+    <text x="281" y="23" fill="#AAC7D2" font-size="10" font-family="monospace" letter-spacing="1.5">
+      02 / RECONSTRUCT
+    </text>
+    <text x="391" y="212" fill="#ADE8DB" font-size="10" font-family="monospace" letter-spacing="1">
+      FOCUS
+    </text>
+  </svg>
+  <figcaption>
+    <span>
+      A wider aperture.
+      <br />
+      <strong>A clearer picture.</strong>
+    </span>
+    <button
+      class="aperture-replay"
+      type="button"
+      data-replay
+      hidden
+      aria-label="Replay the four-second aperture illustration"
+    >
+      <Icon name="replay" size={16} />
+      <span>Replay</span>
+    </button>
+  </figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-aperture]').forEach((figure) => {
+    const button = figure.querySelector<HTMLButtonElement>('[data-replay]')!;
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const stop = () => {
+      clearTimeout(timer);
+      figure.classList.remove('is-running');
+      button.disabled = false;
+    };
+    const play = () => {
+      if (motion.matches) return;
+      stop();
+      figure.classList.add('is-running');
+      button.disabled = true;
+      timer = setTimeout(stop, 4000);
+    };
+    button.hidden = motion.matches;
+    button.addEventListener('click', play);
+    motion.addEventListener('change', () => {
+      stop();
+      button.hidden = motion.matches;
+    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          play();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(figure);
+  });
+</script>

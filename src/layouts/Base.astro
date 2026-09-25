@@ -1,0 +1,198 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import { event } from '../lib/content';
+import { absolute, href } from '../lib/urls';
+import Wordmark from '../components/Wordmark.astro';
+import Icon from '../components/Icon.astro';
+interface Props {
+  title: string;
+  description: string;
+  page?: string;
+  noindex?: boolean;
+}
+const { title, description, page = '', noindex = false } = Astro.props;
+const indexable = import.meta.env.PUBLIC_INDEXABLE === 'true' && !noindex;
+const canonical = new URL(Astro.url.pathname.replace(/\/404\/$/, '/404.html'), Astro.site).href;
+const nav = [
+  { label: 'Program', path: '/program/' },
+  { label: 'Speakers', path: '/speakers/' },
+  { label: 'Attend', path: '/attend/' },
+  { label: 'About', path: '/about/' },
+];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: event.name,
+  description,
+  startDate: event.startDate,
+  endDate: event.endDate,
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  url: absolute('/'),
+  image: absolute('/social-card.png'),
+  location: {
+    '@type': 'Place',
+    name: event.venue,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: event.city,
+      addressRegion: event.region,
+      addressCountry: event.country,
+    },
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <title>{page === 'home' ? 'CISA 2027 — Advancing computational imaging, together.' : `${title} · CISA 2027`}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={indexable ? 'index, follow' : 'noindex, nofollow'} />
+    <meta name="theme-color" content="#F7F8F5" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CISA 2027" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={absolute('/social-card.png')} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="CISA 2027. Advancing computational imaging, together. June 1–3 at the University of Maryland."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main" tabindex="0">
+      Skip to content
+    </a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand-link" href={href('/')} aria-label="CISA 2027 home">
+          <Wordmark />
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+          <span>Menu</span>
+          <span class="menu-lines" aria-hidden="true"></span>
+        </button>
+        <nav class="primary-nav" id="primary-nav" aria-label="Main navigation">
+          {nav.map((item) => (
+            <a
+              href={href(item.path)}
+              aria-current={page === item.label.toLowerCase() ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+          <a
+            class="button nav-cta"
+            href={href('/contribute/')}
+            aria-current={page === 'contribute' ? 'page' : undefined}
+          >
+            Call for papers <Icon name="external" size={18} />
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-top">
+        <div class="footer-brand">
+          <a class="brand-link" href={href('/')} aria-label="CISA 2027 home">
+            <Wordmark />
+          </a>
+          <p>
+            New perspectives.
+            <br />
+            Shared discoveries.
+          </p>
+        </div>
+        <div>
+          <p class="eyebrow">JOIN US IN COLLEGE PARK</p>
+          <p>
+            {event.dateLabel}
+            <br />
+            {event.venue}
+            <br />
+            {event.city}, {event.region}
+          </p>
+        </div>
+        <div>
+          <p class="eyebrow">EXPLORE</p>
+          <div class="footer-links">
+            <a href={href('/program/')}>Program</a>
+            <a href={href('/speakers/')}>Speakers</a>
+            <a href={href('/contribute/')}>Contribute</a>
+            <a href={href('/attend/')}>Attend</a>
+            <a href={href('/about/')}>About CISA</a>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">LET’S CONNECT</p>
+          <a class="footer-email" href={`mailto:${event.email}`}>
+            {event.email}
+            <Icon name="external" size={16} />
+          </a>
+          <p class="footer-note">
+            Research questions.
+            <br />
+            New connections.
+            <br />
+            You’re in the right place.
+          </p>
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        <span>© {event.edition} CISA Conference</span>
+        <span>Computational imaging. Across disciplines.</span>
+        <a href={href('/about/#affiliations')}>
+          Conference affiliations <Icon name="external" size={14} />
+        </a>
+      </div>
+    </footer>
+    <script>
+      const button = document.querySelector<HTMLButtonElement>('.menu-toggle');
+      const nav = document.querySelector<HTMLElement>('.primary-nav');
+      if (button && nav) {
+        button.hidden = false;
+        const media = window.matchMedia('(max-width: 800px)');
+        const setOpen = (open: boolean) => {
+          button.setAttribute('aria-expanded', String(open));
+          nav.classList.toggle('is-open', open);
+          nav.hidden = media.matches && !open;
+        };
+        setOpen(false);
+        button.addEventListener('click', () =>
+          setOpen(button.getAttribute('aria-expanded') !== 'true'),
+        );
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') {
+            setOpen(false);
+            button.focus();
+          }
+        });
+        document.addEventListener('click', (e) => {
+          if (e.target instanceof Node && !nav.contains(e.target) && !button.contains(e.target))
+            setOpen(false);
+        });
+        nav
+          .querySelectorAll('a')
+          .forEach((link) => link.addEventListener('click', () => setOpen(false)));
+        media.addEventListener('change', () => setOpen(false));
+      }
+    </script>
+  </body>
+</html>
