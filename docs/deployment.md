@@ -6,7 +6,7 @@
 2. The Check website workflow checks types, content publication, links, both hosting configurations, and browser behavior.
 3. After checks pass on a push to `main`, the deployment workflow builds that checked commit and publishes its `dist` artifact.
 
-The default origin is `https://OWNER.github.io` and the default base is `/REPOSITORY/`. All links and assets use this base. The default preview emits `noindex, nofollow` and a blocking `robots.txt`; this is search-engine guidance, not access control.
+The official Pages action provides the configured origin and base path. This also handles account-level custom domains, which GitHub automatically inherits for project sites. This account’s preview is `https://ritwikgupta.me/cisa-conference-website/`. All links and assets use the reported base. The default preview emits `noindex, nofollow` and a blocking `robots.txt`; this is search-engine guidance, not access control.
 
 Repository variables can override the defaults:
 

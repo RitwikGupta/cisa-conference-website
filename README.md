@@ -39,7 +39,7 @@ Run `npm run format` before committing changes. GitHub Actions checks pull reque
 
 ## Publish
 
-The deployment workflow uses GitHub Pages, initially at `https://OWNER.github.io/REPOSITORY/`. It derives the owner and project path from repository metadata. Choose **GitHub Actions** as the Pages source in repository settings.
+The deployment workflow uses GitHub Pages and reads its configured origin and project path through the official Pages action. Choose **GitHub Actions** as the Pages source in repository settings. An account-level custom domain is inherited automatically: this repository’s initial preview is `https://ritwikgupta.me/cisa-conference-website/`.
 
 For custom-domain launch, follow [the deployment guide](docs/deployment.md). Do not change DNS until the preview has been checked and content is ready.
 
