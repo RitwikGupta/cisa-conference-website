@@ -1,6 +1,6 @@
 # Validation record
 
-Scientific scope, call for papers, deadlines, and reconstruction animation validated September 25, 2026 using Node 24.21.0.
+Scientific scope, call for papers, deadlines, and terrapin reconstruction animation validated September 25, 2026 using Node 24.21.0.
 
 - Astro type checking: zero errors, warnings, or hints.
 - Content validation, publication, and deployment helpers: six passing unit tests. Deadline checks cover date-only records, timezone-qualified timestamps, invalid dates, and the requirement to provide exactly one date format.
@@ -11,7 +11,7 @@ Scientific scope, call for papers, deadlines, and reconstruction animation valid
 - Reflow: verified the effective 512 CSS-pixel viewport corresponding to a 1024-pixel display at 200% browser zoom.
 - Manual visual review: desktop and mobile homepage, program, speaker, contribution, attendance, and About layouts; institutional marks; complete page screenshots.
 
-The homepage and call for papers were visually reviewed at all five widths, including the cropped hero background on mobile. Two complete 12-second animation cycles were captured and inspected: measurements accumulate over eight seconds, overlapping features become resolved, the reconstruction holds for two seconds, and the final two seconds crossfade back to the initial state. The title and body text remained readable throughout. Browser checks verify all nine sequential sampling highlights, traveling signals, reconstruction stages, and loop continuity. Reduced-motion and JavaScript-disabled views keep the resolved static illustration and hide the control. Hero links use filled and outlined buttons, with room for the playback control on narrow screens. Pale teal research sections retain AA text contrast.
+The homepage and call for papers were visually reviewed at all five widths, including the cropped hero background on mobile. After replacing the two point features with an original terrapin vector, the resolved artwork was reviewed again at every width. Two complete 12-second animation cycles were captured and inspected: measurements accumulate over eight seconds, a diffuse estimate sharpens into a terrapin silhouette and detailed shell, the reconstruction holds for two seconds, and the final two seconds crossfade back to the initial state. The title and body text remained readable throughout. Browser checks verify all nine sequential sampling highlights, traveling signals, reconstruction stages, and loop continuity. Reduced-motion and JavaScript-disabled views keep the resolved static illustration and hide the control; the accessible description identifies the terrapin reconstruction. Hero links use filled and outlined buttons, with room for the playback control on narrow screens. Pale teal research sections retain AA text contrast.
 
 The scientific scope and all 17 topic categories were checked against the approved flyer. The HTML call includes the 4+1-page format, special-session and tutorial proposals, and the in-person presentation requirement. All six published deadlines match between Home and Call for Papers; Attend uses the same advance-registration record. Date-only values render without timezone conversion or added cutoff times, all displayed deadlines include the year, and the existing timed fixture retains its timezone-qualified value. The downloadable PDF is unchanged.
 

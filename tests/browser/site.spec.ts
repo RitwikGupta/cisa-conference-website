@@ -208,6 +208,9 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
   await expect(page.getByRole('button', { name: 'Pause aperture animation' })).toBeHidden();
   await expect(page.locator('.aperture-signal').first()).toHaveCSS('animation-name', 'none');
   await expect(page.getByRole('img', { name: 'Synthetic-aperture imaging' })).toBeVisible();
+  await expect(
+    page.getByRole('img', { name: 'Synthetic-aperture imaging' }),
+  ).toHaveAccessibleDescription(/reconstructing a terrapin/);
   await expect(page.locator('.aperture-resolved')).toHaveCSS('opacity', '1');
   await expect(page.locator('.aperture-coarse')).toHaveCSS('opacity', '0');
   await page.getByRole('link', { name: 'Technical program', exact: true }).click();

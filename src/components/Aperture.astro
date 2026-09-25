@@ -25,8 +25,9 @@ const samples = Array.from({ length: 9 }, (_, i) => {
   >
     <title id="aperture-title">Synthetic-aperture imaging</title>
     <desc id="aperture-description">
-      Schematic of measurements collected at nine positions contributing to reconstruction. As
-      measurements accumulate, two initially overlapping image features become resolved.
+      Schematic of measurements collected at nine positions reconstructing a terrapin. As
+      measurements accumulate, a blurred estimate resolves into the turtle’s outline and shell
+      pattern, a reference to the University of Maryland.
     </desc>
     <defs>
       <radialGradient id="reconstruction-glow">
@@ -34,6 +35,29 @@ const samples = Array.from({ length: 9 }, (_, i) => {
         <stop offset=".35" stop-color="#087F83" stop-opacity=".3" />
         <stop offset="1" stop-color="#087F83" stop-opacity="0" />
       </radialGradient>
+      <filter id="terrapin-soft" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="4" />
+      </filter>
+      <!-- Original top-view terrapin drawing; shared by the two reconstruction estimates. -->
+      <g
+        id="terrapin-outline"
+        fill="#C4DED3"
+        stroke="#087F83"
+        stroke-width="2.2"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+      >
+        <path d="M-11 73L0 111L11 73" />
+        <path d="M-17-68L-18-92C-25-98-23-119-12-125Q0-132 12-125C23-119 25-98 18-92L17-68" />
+        <path id="terrapin-foreleg" d="M-43-49C-64-60-88-56-101-38L-96-24C-81-22-62-29-49-21" />
+        <use href="#terrapin-foreleg" transform="scale(-1 1)" />
+        <path id="terrapin-hindleg" d="M-47 45C-73 48-87 64-83 83L-66 91C-53 81-38 70-32 60" />
+        <use href="#terrapin-hindleg" transform="scale(-1 1)" />
+        <path
+          d="M0-83C45-85 67-40 67 7C67 56 32 88 0 90C-35 88-67 52-67 7C-67-39-46-83 0-83Z"
+          fill="#E7EFEA"
+        />
+      </g>
     </defs>
     <g class="aperture-traces" stroke="#087F83" stroke-opacity=".12" stroke-width="1.3">
       <path d="M-80 15Q540 15 1090 235M-80 110Q540 110 1090 235" />
@@ -86,63 +110,38 @@ const samples = Array.from({ length: 9 }, (_, i) => {
         </g>
       ))}
     </g>
-    <g class="aperture-focus">
+    <g class="aperture-focus" transform="translate(1090 280) rotate(18)">
       <g class="aperture-coarse aperture-motion" data-reconstruction="coarse">
-        <ellipse cx="1090" cy="280" rx="95" ry="112" fill="url(#reconstruction-glow)" />
-        <ellipse
-          cx="1090"
-          cy="280"
-          rx="65"
-          ry="86"
-          stroke="#087F83"
-          stroke-opacity=".25"
-          stroke-width="1.5"
-        />
-        <ellipse
-          cx="1090"
-          cy="280"
-          rx="43"
-          ry="60"
-          stroke="#087F83"
-          stroke-opacity=".2"
-          stroke-width="1.5"
-        />
+        <ellipse rx="104" ry="132" fill="url(#reconstruction-glow)" />
+        <ellipse cy="-91" rx="40" ry="56" fill="url(#reconstruction-glow)" opacity=".6" />
+        {[-1, 1].map((side) => (
+          <g opacity=".45">
+            <ellipse cx={side * 65} cy="-36" rx="54" ry="37" fill="url(#reconstruction-glow)" />
+            <ellipse cx={side * 53} cy="64" rx="44" ry="44" fill="url(#reconstruction-glow)" />
+          </g>
+        ))}
       </g>
       <g class="aperture-intermediate aperture-motion" data-reconstruction="intermediate">
-        {[235, 325].map((y) => (
-          <g>
-            <ellipse cx="1090" cy={y} rx="65" ry="69" fill="url(#reconstruction-glow)" />
-            <ellipse
-              cx="1090"
-              cy={y}
-              rx="40"
-              ry="45"
-              stroke="#087F83"
-              stroke-opacity=".4"
-              stroke-width="1.5"
-            />
-          </g>
-        ))}
+        <use href="#terrapin-outline" filter="url(#terrapin-soft)" opacity=".8" />
       </g>
       <g class="aperture-resolved aperture-motion" data-reconstruction="resolved">
-        {[235, 325].map((y) => (
-          <g>
-            <circle cx="1090" cy={y} r="62" fill="url(#reconstruction-glow)" />
-            {[15, 28, 43].map((r, i) => (
-              <ellipse
-                cx="1090"
-                cy={y}
-                rx={r}
-                ry={r * 0.7}
-                stroke="#087F83"
-                stroke-opacity={0.65 - i * 0.2}
-                stroke-width="1.5"
-              />
-            ))}
-            <ellipse cx="1090" cy={y} rx="7" ry="5" fill="#087F83" />
-            <circle cx="1090" cy={y} r="2.5" fill="#06676B" />
-          </g>
-        ))}
+        <use href="#terrapin-outline" />
+        <g stroke="#087F83" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M0-69C36-70 53-31 53 8C53 47 28 75 0 77C-29 75-53 47-53 8C-53-31-36-70 0-69Z" />
+          <path
+            d="M0-69L-19-47L-18-20L-23 8L-19 38L0 63L19 38L23 8L18-20L19-47Z"
+            fill="#087F83"
+            fill-opacity=".1"
+          />
+          <path d="M-19-47L0-37L19-47M-18-20L0-10L18-20M-23 8L0 19L23 8M-19 38L0 47L19 38M0 63V77" />
+          <path d="M-19-47L-35-52M19-47L35-52M-18-20L-49-23M18-20L49-23M-23 8L-53 14M23 8L53 14M-19 38L-40 52M19 38L40 52" />
+          <path d="M-35-52L-44-59M35-52L44-59M-49-23L-62-25M49-23L62-25M-53 14L-66 16M53 14L66 16M-40 52L-50 61M40 52L50 61M0 77V90" />
+          <path d="M-13-96L-8-88M13-96L8-88M-94-40L-87-35M94-40L87-35M-80 76L-72 78M80 76L72 78" />
+        </g>
+        <g fill="#06676B">
+          <circle cx="-11" cy="-111" r="2.2" />
+          <circle cx="11" cy="-111" r="2.2" />
+        </g>
       </g>
     </g>
   </svg>
