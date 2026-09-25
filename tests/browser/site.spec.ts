@@ -78,6 +78,8 @@ test('hero background spans the section and leaves links and playback accessible
     expect(controlBox.width).toBeGreaterThanOrEqual(44);
     expect(controlBox.height).toBeGreaterThanOrEqual(44);
     for (const link of await hero.getByRole('link').all()) {
+      await link.scrollIntoViewIfNeeded();
+      const controlBox = (await control.boundingBox())!;
       const box = (await link.boundingBox())!;
       const overlaps =
         box.x < controlBox.x + controlBox.width &&
@@ -131,7 +133,7 @@ test('artwork loops, pauses by keyboard, and respects reduced motion', async ({ 
 
   // Check both sides of the cycle boundary without a slow wall-clock sleep.
   const boundary = await art.evaluate((figure) => {
-    const signals = [...figure.querySelectorAll('.aperture-signal')];
+    const signals = [...figure.querySelectorAll('.aperture-motion')];
     const sample = (time: number) =>
       signals.map((el) => {
         const animation = el.getAnimations()[0];
@@ -151,6 +153,9 @@ test('artwork loops, pauses by keyboard, and respects reduced motion', async ({ 
   await expect(pause).toBeHidden();
   await expect(signal).toHaveCSS('animation-name', 'none');
   await expect(signal).toHaveCSS('opacity', '0.65');
+  await expect(art.locator('.aperture-resolved')).toHaveCSS('opacity', '1');
+  await expect(art.locator('.aperture-coarse')).toHaveCSS('opacity', '0');
+  await expect(art.locator('.aperture-packet').first()).toHaveCSS('opacity', '0');
   await expect(art.locator('.aperture-focus')).toHaveCSS('filter', 'none');
 });
 
@@ -203,6 +208,8 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
   await expect(page.getByRole('button', { name: 'Pause aperture animation' })).toBeHidden();
   await expect(page.locator('.aperture-signal').first()).toHaveCSS('animation-name', 'none');
   await expect(page.getByRole('img', { name: 'Synthetic-aperture imaging' })).toBeVisible();
+  await expect(page.locator('.aperture-resolved')).toHaveCSS('opacity', '1');
+  await expect(page.locator('.aperture-coarse')).toHaveCSS('opacity', '0');
   await page.getByRole('link', { name: 'Technical program', exact: true }).click();
   await expect(page.locator('#research-themes')).toBeVisible();
   await page.goto('http://127.0.0.1:4321/attend/');
@@ -212,7 +219,13 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
 });
 
 test('populated speaker and schedule layouts handle long content', async ({ page }) => {
-  for (const route of ['/', '/speakers/', '/speakers/fixture-current/', '/program/']) {
+  for (const route of [
+    '/',
+    '/speakers/',
+    '/speakers/fixture-current/',
+    '/program/',
+    '/contribute/',
+  ]) {
     await page.goto(`http://127.0.0.1:4322${route}`);
     for (const width of widths) {
       await page.setViewportSize({ width, height: 900 });
@@ -246,4 +259,80 @@ test('200% page-zoom equivalent reflow retains content and controls', async ({ b
   ).toBe(false);
   await expect(page.getByRole('link', { name: 'Download the PDF' })).toBeVisible();
   await context.close();
+});
+
+test('measurement pulses travel and reconstruction resolves before the cycle fades', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const art = page.locator('[data-aperture]');
+  await expect(art).toHaveClass(/is-running/);
+  const phase = (time: number) =>
+    art.evaluate((figure, time) => {
+      figure.querySelectorAll('.aperture-motion').forEach((element) => {
+        const animation = element.getAnimations()[0];
+        animation.pause();
+        animation.currentTime = time;
+      });
+      const opacity = (selector: string) =>
+        Number(getComputedStyle(figure.querySelector(selector)!).opacity);
+      return {
+        coarse: opacity('.aperture-coarse'),
+        intermediate: opacity('.aperture-intermediate'),
+        resolved: opacity('.aperture-resolved'),
+        signals: [...figure.querySelectorAll('.aperture-signal')].map((el) =>
+          Number(getComputedStyle(el).opacity),
+        ),
+        packet: parseFloat(
+          getComputedStyle(figure.querySelector('.aperture-packet')!).strokeDashoffset,
+        ),
+      };
+    }, time);
+  expect(await phase(0)).toMatchObject({ coarse: 1, intermediate: 0, resolved: 0 });
+  for (let i = 0; i < 9; i++) {
+    const state = await phase(400 + i * 850);
+    expect(state.signals[i]).toBeGreaterThan(0.9);
+  }
+  const start = await phase(300);
+  const later = await phase(600);
+  expect(later.packet).toBeLessThan(start.packet);
+  expect((await phase(4500)).intermediate).toBe(1);
+  expect(await phase(9000)).toMatchObject({ coarse: 0, intermediate: 0, resolved: 1 });
+  expect((await phase(10000)).resolved).toBeGreaterThan(0.99);
+  const reset = await phase(11000);
+  expect(reset.coarse).toBeCloseTo(0.5, 2);
+  expect(reset.resolved).toBeCloseTo(0.5, 2);
+});
+
+test('flyer dates are consistent across pages and preserve date-only precision', async ({
+  page,
+}) => {
+  const expected = [
+    ['proposals', '2026-12-01', 'December 1, 2026'],
+    ['initial-submissions', '2027-01-29', 'January 29, 2027'],
+    ['climate-submissions', '2027-01-29', 'January 29, 2027'],
+    ['acceptance', '2027-02-19', 'February 19, 2027'],
+    ['advance-registration', '2027-03-05', 'March 5, 2027'],
+    ['camera-ready', '2027-05-07', 'May 7, 2027'],
+  ];
+  for (const route of ['/', '/contribute/']) {
+    await page.goto(route);
+    await expect(page.locator('[data-deadline]')).toHaveCount(6);
+    for (const [id, date, label] of expected) {
+      const time = page.locator(`[data-deadline="${id}"] time`);
+      await expect(time).toHaveAttribute('datetime', date);
+      await expect(time).toHaveText(label);
+    }
+  }
+  await expect(page.locator('article.prose ul li strong')).toHaveCount(17);
+  await expect(page.locator('article.prose')).toContainText('4+1-page');
+  await page.goto('/attend/');
+  await expect(page.locator('[data-deadline="advance-registration"] time')).toHaveText(
+    'March 5, 2027',
+  );
+  await page.goto('http://127.0.0.1:4322/contribute/');
+  const timed = page.locator('[data-deadline="fixture"] time');
+  await expect(timed).toHaveAttribute('datetime', '2027-01-29T23:59:00-05:00');
+  await expect(timed).toContainText('2027, 11:59 p.m. Eastern');
 });

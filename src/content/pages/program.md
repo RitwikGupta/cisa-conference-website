@@ -1,6 +1,6 @@
 ---
 title: Technical program
-description: Research topics, technical sessions, tutorials, and the schedule for CISA 2027.
+description: Physics-based imaging, synthetic-aperture research, engineering practice, and standardization at CISA 2027. Technical sessions, tutorials, and schedule.
 ---
 
 The technical program will be announced.

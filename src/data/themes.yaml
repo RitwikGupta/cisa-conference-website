@@ -1,30 +1,55 @@
-- id: ai-for-imaging
-  title: AI for imaging
-  description: AI methods for image acquisition, reconstruction, and interpretation.
-  examples: [Vision-language models (VLMs), Generative reconstruction, Agentic imaging workflows]
-  order: 1
-- id: microscopy
-  title: Microscopy and cryo-EM/ET
-  description: Computational methods for microscopic and structural imaging.
-  examples: [Computational microscopy, Cryo-electron microscopy, Cryo-electron tomography]
-  order: 2
-- id: remote-sensing
-  title: Remote sensing, radar, and sonar
-  description: Synthetic-aperture sensing systems and their applications in remote observation.
-  examples: [Synthetic-aperture radar and sonar, Earth observation, Environmental monitoring]
-  order: 3
-- id: optical-wave-imaging
-  title: Optical and wave imaging
-  description: Image formation and reconstruction using optical and wave-based measurements.
-  examples: [Fourier ptychography, Holography, Wave-based reconstruction]
-  order: 4
-- id: medical-astronomical
-  title: Medical and astronomical imaging
-  description: Computational methods for medical imaging and astronomical observation.
-  examples: [MRI and ultrasound, Computed tomography, Radio astronomy]
-  order: 5
 - id: inverse-problems
   title: Inverse problems and reconstruction
-  description: Mathematical and physical methods for recovering images from incomplete measurements.
-  examples: [Sampling and optimization, Physics-based models, Uncertainty quantification]
+  description: Forward models, measurement design, and reconstruction methods for recovering images from noisy, incomplete, or irregularly sampled data.
+  examples:
+    [
+      Physics-based models,
+      Sampling and optimization,
+      Compressed sensing,
+      Uncertainty quantification,
+    ]
+  order: 1
+- id: remote-sensing
+  title: Remote sensing, radar, and sonar
+  description: Synthetic-aperture acquisition and reconstruction for remote observation, including sensor design and environmental measurements.
+  examples:
+    [
+      Synthetic-aperture radar and sonar,
+      Radiometry and GNSS reflectometry,
+      Climate and environmental monitoring,
+    ]
+  order: 2
+- id: optical-wave-imaging
+  title: Optical and wave imaging
+  description: Physical models of wave propagation and computational methods that connect optical measurements to reconstructed images.
+  examples:
+    [
+      Fourier ptychography,
+      Holography and coded apertures,
+      Time-of-flight imaging,
+      Physics-based super-resolution,
+    ]
+  order: 3
+- id: medical-astronomical
+  title: Medical and astronomical imaging
+  description: Image formation and physical inverse problems in tomography, medical sensing, and astronomical observation.
+  examples:
+    [MRI and ultrasound, X-ray and Doppler tomography, Radio astronomy and k-space reconstruction]
+  order: 4
+- id: microscopy
+  title: Microscopy and cryo-EM/ET
+  description: Computational microscopy and structural imaging through physical models of measurement and reconstruction from limited or noisy observations.
+  examples: [Synthetic-aperture microscopy, Cryo-electron microscopy, Cryo-electron tomography]
+  order: 5
+- id: ai-for-imaging
+  title: AI for imaging
+  description: Learning methods that use imaging physics or measurement structure to support acquisition, reconstruction, and analysis. This includes VLMs for reasoning about imaging data and agentic acquisition and reconstruction workflows.
+  examples:
+    [
+      Plug-and-play reconstruction,
+      Diffusion priors,
+      Physics-informed methods,
+      Vision-language models (VLMs),
+      Agentic imaging workflows,
+    ]
   order: 6

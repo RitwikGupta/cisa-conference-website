@@ -3,10 +3,12 @@ import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Icon from '../components/Icon.astro';
-import { event } from '../lib/content';
+import DeadlineList from '../components/DeadlineList.astro';
+import { event, deadlines } from '../lib/content';
 import { href } from '../lib/urls';
 const page = (await getEntry('pages', 'attend'))!;
 const { Content } = await render(page);
+const registrationDeadlines = deadlines.filter((entry) => entry.id === 'advance-registration');
 ---
 
 <Base {...page.data} page="attend">
@@ -27,6 +29,7 @@ const { Content } = await render(page);
     <aside class="sidebar-stack" aria-label="Conference details">
       <section class="sidebar-section">
         <h2>Registration</h2>
+        {registrationDeadlines.length > 0 && <DeadlineList entries={registrationDeadlines} />}
         {event.registration?.confirmed ? (
           <>
             <p>Registration for CISA 2027 is open.</p>

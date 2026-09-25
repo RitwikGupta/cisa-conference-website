@@ -3,6 +3,7 @@ import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Icon from '../components/Icon.astro';
+import DeadlineList from '../components/DeadlineList.astro';
 import { event, deadlines } from '../lib/content';
 import { href } from '../lib/urls';
 const page = (await getEntry('pages', 'contribute'))!;
@@ -47,16 +48,7 @@ const { Content } = await render(page);
       {deadlines.length > 0 && (
         <section class="sidebar-section">
           <h2>Important dates</h2>
-          <dl class="fact-list section-copy">
-            {deadlines.map(({ data }) => (
-              <div>
-                <dt>{data.title}</dt>
-                <dd>
-                  <time datetime={data.datetime}>{data.dateLabel}</time>
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <DeadlineList entries={deadlines} />
         </section>
       )}
     </aside>

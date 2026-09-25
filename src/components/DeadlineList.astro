@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props {
+  entries: CollectionEntry<'deadlines'>[];
+}
+const { entries } = Astro.props;
+---
+
+<dl class="fact-list section-copy">
+  {entries.map(({ id, data }) => (
+    <div data-deadline={id}>
+      <dt>{data.title}</dt>
+      <dd>
+        <time datetime={data.date ?? data.datetime}>{data.dateLabel}</time>
+      </dd>
+    </div>
+  ))}
+</dl>

@@ -317,13 +317,11 @@
     inset: 0;
     z-index: 1;
     pointer-events: none;
+    width: calc(max(48px, (100% - var(--max)) / 2) + 760px);
     background: linear-gradient(
       90deg,
-      rgb(247 248 245 / 0.6),
-      rgb(247 248 245 / 0.92) 12%,
-      rgb(247 248 245 / 0.96) 42%,
-      rgb(247 248 245 / 0.85) 55%,
-      rgb(247 248 245 / 0.15) 78%,
+      var(--paper) 0%,
+      rgb(247 248 245 / 0.96) 86%,
       rgb(247 248 245 / 0)
     );
   }
@@ -373,7 +371,6 @@
     display: block;
     width: 100%;
     height: 100%;
-    opacity: 0.9;
   }
   .aperture-toggle {
     position: absolute;
@@ -408,215 +405,103 @@
   .aperture-signal {
     opacity: 0.65;
   }
-  .aperture.has-motion .aperture-signal {
-    animation: var(--sweep) 12s ease-in-out infinite both;
+  .aperture-packet,
+  .aperture-coarse,
+  .aperture-intermediate {
+    opacity: 0;
+  }
+  .aperture-resolved {
+    opacity: 1;
+  }
+  .aperture.has-motion .aperture-motion {
+    animation-duration: 12s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
     animation-play-state: paused;
   }
-  .aperture.is-running .aperture-signal {
+  .aperture.has-motion .aperture-signal {
+    animation-name: aperture-measure;
+    animation-delay: var(--sample-delay);
+  }
+  .aperture.has-motion .aperture-packet {
+    animation-name: aperture-travel;
+    animation-delay: var(--sample-delay);
+  }
+  .aperture.has-motion .aperture-coarse {
+    animation-name: aperture-coarse;
+  }
+  .aperture.has-motion .aperture-intermediate {
+    animation-name: aperture-intermediate;
+  }
+  .aperture.has-motion .aperture-resolved {
+    animation-name: aperture-resolved;
+  }
+  .aperture.is-running .aperture-motion {
     animation-play-state: running;
   }
-  @keyframes aperture-sample-0 {
-    0% {
-      opacity: 1;
-    }
-    6.25% {
-      opacity: 0.08;
-    }
-    93.75% {
-      opacity: 0.08;
-    }
+  @keyframes aperture-measure {
+    0%,
+    7.5%,
     100% {
+      opacity: 0;
+    }
+    1%,
+    4% {
       opacity: 1;
     }
   }
-  @keyframes aperture-sample-1 {
+  @keyframes aperture-travel {
     0% {
-      opacity: 0.08;
+      opacity: 0;
+      stroke-dashoffset: 100;
     }
-    6.25% {
+    1% {
       opacity: 1;
+      stroke-dashoffset: 100;
     }
-    12.5% {
-      opacity: 0.08;
-    }
-    87.5% {
-      opacity: 0.08;
-    }
-    93.75% {
+    6.5% {
       opacity: 1;
+      stroke-dashoffset: 0;
     }
+    7.5%,
     100% {
-      opacity: 0.08;
+      opacity: 0;
+      stroke-dashoffset: 0;
     }
   }
-  @keyframes aperture-sample-2 {
-    0% {
-      opacity: 0.08;
-    }
-    6.25% {
-      opacity: 0.08;
-    }
-    12.5% {
-      opacity: 1;
-    }
-    18.75% {
-      opacity: 0.08;
-    }
-    81.25% {
-      opacity: 0.08;
-    }
-    87.5% {
-      opacity: 1;
-    }
-    93.75% {
-      opacity: 0.08;
-    }
+  @keyframes aperture-coarse {
+    0%,
+    10%,
     100% {
-      opacity: 0.08;
+      opacity: 1;
+    }
+    33.333%,
+    83.333% {
+      opacity: 0;
     }
   }
-  @keyframes aperture-sample-3 {
-    0% {
-      opacity: 0.08;
-    }
-    12.5% {
-      opacity: 0.08;
-    }
-    18.75% {
-      opacity: 1;
-    }
-    25% {
-      opacity: 0.08;
-    }
-    75% {
-      opacity: 0.08;
-    }
-    81.25% {
-      opacity: 1;
-    }
-    87.5% {
-      opacity: 0.08;
-    }
+  @keyframes aperture-intermediate {
+    0%,
+    10%,
+    66.667%,
     100% {
-      opacity: 0.08;
+      opacity: 0;
     }
-  }
-  @keyframes aperture-sample-4 {
-    0% {
-      opacity: 0.08;
-    }
-    18.75% {
-      opacity: 0.08;
-    }
-    25% {
-      opacity: 1;
-    }
-    31.25% {
-      opacity: 0.08;
-    }
-    68.75% {
-      opacity: 0.08;
-    }
-    75% {
-      opacity: 1;
-    }
-    81.25% {
-      opacity: 0.08;
-    }
-    100% {
-      opacity: 0.08;
-    }
-  }
-  @keyframes aperture-sample-5 {
-    0% {
-      opacity: 0.08;
-    }
-    25% {
-      opacity: 0.08;
-    }
-    31.25% {
-      opacity: 1;
-    }
-    37.5% {
-      opacity: 0.08;
-    }
-    62.5% {
-      opacity: 0.08;
-    }
-    68.75% {
-      opacity: 1;
-    }
-    75% {
-      opacity: 0.08;
-    }
-    100% {
-      opacity: 0.08;
-    }
-  }
-  @keyframes aperture-sample-6 {
-    0% {
-      opacity: 0.08;
-    }
-    31.25% {
-      opacity: 0.08;
-    }
-    37.5% {
-      opacity: 1;
-    }
-    43.75% {
-      opacity: 0.08;
-    }
-    56.25% {
-      opacity: 0.08;
-    }
-    62.5% {
-      opacity: 1;
-    }
-    68.75% {
-      opacity: 0.08;
-    }
-    100% {
-      opacity: 0.08;
-    }
-  }
-  @keyframes aperture-sample-7 {
-    0% {
-      opacity: 0.08;
-    }
-    37.5% {
-      opacity: 0.08;
-    }
-    43.75% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.08;
-    }
-    56.25% {
-      opacity: 1;
-    }
-    62.5% {
-      opacity: 0.08;
-    }
-    100% {
-      opacity: 0.08;
-    }
-  }
-  @keyframes aperture-sample-8 {
-    0% {
-      opacity: 0.08;
-    }
-    43.75% {
-      opacity: 0.08;
-    }
+    33.333%,
     50% {
       opacity: 1;
     }
-    56.25% {
-      opacity: 0.08;
-    }
+  }
+  @keyframes aperture-resolved {
+    0%,
+    50%,
     100% {
-      opacity: 0.08;
+      opacity: 0;
+    }
+    66.667%,
+    83.333% {
+      opacity: 1;
     }
   }
   .research-surface {
@@ -715,6 +600,10 @@
   .sidebar-section p {
     color: var(--muted);
     margin-top: 16px;
+  }
+  .sidebar-section .fact-list > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
   .sidebar-section .button {
     margin-top: 20px;
@@ -870,6 +759,9 @@
     .primary-nav {
       gap: 22px;
     }
+    .hero::after {
+      width: 800px;
+    }
     .aperture-toggle {
       right: 32px;
     }
@@ -924,19 +816,22 @@
       display: none;
     }
     .hero::after {
+      width: 100%;
       background: linear-gradient(
-        180deg,
-        rgb(247 248 245 / 0.94),
-        rgb(247 248 245 / 0.8) 60%,
-        rgb(247 248 245 / 0.55)
+        90deg,
+        var(--paper),
+        rgb(247 248 245 / 0.92) 72%,
+        rgb(247 248 245 / 0.35)
       );
     }
     .aperture-svg {
-      inset: auto -100px 20px auto;
-      width: 960px;
+      inset: auto -80px 40px auto;
+      width: 700px;
       max-width: none;
       height: 420px;
-      opacity: 0.5;
+    }
+    .aperture-traces {
+      display: none;
     }
     .footer-inner {
       flex-direction: column;

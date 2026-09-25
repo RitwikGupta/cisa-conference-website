@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import Aperture from '../components/Aperture.astro';
 import Themes from '../components/Themes.astro';
 import SpeakerCard from '../components/SpeakerCard.astro';
+import DeadlineList from '../components/DeadlineList.astro';
 import { event, speakers, program, deadlines } from '../lib/content';
 import { href } from '../lib/urls';
 const home = (await getEntry('pages', 'home'))!;
@@ -67,16 +68,7 @@ const featured = speakers.filter((speaker) => speaker.data.featured).slice(0, 3)
   {deadlines.length > 0 && (
     <section class="section wrap border-section">
       <h2>Important dates</h2>
-      <dl class="fact-list section-copy">
-        {deadlines.map(({ data }) => (
-          <div>
-            <dt>{data.title}</dt>
-            <dd>
-              <time datetime={data.datetime}>{data.dateLabel}</time>
-            </dd>
-          </div>
-        ))}
-      </dl>
+      <DeadlineList entries={deadlines} />
     </section>
   )}
   <section class="section wrap border-section">

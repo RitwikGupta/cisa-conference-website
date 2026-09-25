@@ -1,17 +1,19 @@
 # Validation record
 
-Full-width hero and footer refinement validated September 25, 2026 using Node 24.21.0.
+Scientific scope, call for papers, deadlines, and reconstruction animation validated September 25, 2026 using Node 24.21.0.
 
 - Astro type checking: zero errors, warnings, or hints.
-- Publication and deployment helpers: three passing unit tests.
+- Content validation, publication, and deployment helpers: six passing unit tests. Deadline checks cover date-only records, timezone-qualified timestamps, invalid dates, and the requirement to provide exactly one date format.
 - Static builds: verified the GitHub Pages project subpath and custom-domain root, including page links, fragments, fonts, logos, PDF downloads, calendar, metadata, robots.txt, sitemap, and legacy redirects.
-- Populated-content fixture: verified a long speaker name, affiliation, portrait, biography, abstract, deadline, and scheduled keynote. The homepage, speaker listing, speaker profile, and program fixture were checked at all five viewport widths. Draft and previous-edition entries remained excluded.
-- Browser tests: 28 passing tests across Chromium and mobile WebKit, with every main page checked at 360, 390, 768, 1024, and 1440 CSS pixels.
+- Populated-content fixture: verified a long speaker name, affiliation, portrait, biography, abstract, timed deadline, and scheduled keynote. The homepage, call for papers, speaker listing, speaker profile, and program fixture were checked at all five viewport widths. Draft and previous-edition entries remained excluded.
+- Browser tests: 32 passing tests across Chromium and mobile WebKit, with every main page checked at 360, 390, 768, 1024, and 1440 CSS pixels.
 - Accessibility: no axe WCAG A/AA violations in the checked pages. Keyboard skip navigation, mobile menu dismissal/focus, reduced motion, keyboard pause/resume, full-width artwork bounds, unobstructed hero links, loop-boundary continuity, offscreen pauses, and navigation without JavaScript passed. Hidden-tab lifecycle events were simulated in the headless tests; manual pauses remained in effect through visibility and motion-preference changes.
 - Reflow: verified the effective 512 CSS-pixel viewport corresponding to a 1024-pixel display at 200% browser zoom.
 - Manual visual review: desktop and mobile homepage, program, speaker, contribution, attendance, and About layouts; institutional marks; complete page screenshots.
 
-The homepage hero was visually reviewed at all five widths, including the cropped background on mobile. Two complete 12-second sampling cycles were captured and inspected; both image features stayed resolved and the title and body text remained readable through the sweep. Hero links use filled and outlined buttons, with room for the playback control on narrow screens. Pale teal research sections retain AA text contrast.
+The homepage and call for papers were visually reviewed at all five widths, including the cropped hero background on mobile. Two complete 12-second animation cycles were captured and inspected: measurements accumulate over eight seconds, overlapping features become resolved, the reconstruction holds for two seconds, and the final two seconds crossfade back to the initial state. The title and body text remained readable throughout. Browser checks verify all nine sequential sampling highlights, traveling signals, reconstruction stages, and loop continuity. Reduced-motion and JavaScript-disabled views keep the resolved static illustration and hide the control. Hero links use filled and outlined buttons, with room for the playback control on narrow screens. Pale teal research sections retain AA text contrast.
+
+The scientific scope and all 17 topic categories were checked against the approved flyer. The HTML call includes the 4+1-page format, special-session and tutorial proposals, and the in-person presentation requirement. All six published deadlines match between Home and Call for Papers; Attend uses the same advance-registration record. Date-only values render without timezone conversion or added cutoff times, all displayed deadlines include the year, and the existing timed fixture retains its timezone-qualified value. The downloadable PDF is unchanged.
 
 The simplified footer was reviewed across all six pages and rechecked in both browser engines after correcting email wrapping at tablet widths. It retains identity, copyright, and contact without a navigation list. Home and About no longer repeat the call-for-papers attribution; the affiliation logos and committee name remain without explanatory labels.
 
@@ -27,7 +29,7 @@ Local production build, simulated mobile conditions:
 | Accessibility            | 100         |
 | Best practices           | 100         |
 | Largest contentful paint | 1.2 seconds |
-| Cumulative layout shift  | 0           |
+| Cumulative layout shift  | 0.033       |
 
 SEO scoring is intentionally reduced by the preview’s `noindex` metadata and blocking robots.txt. Enable indexing only at production-domain launch. Lighthouse is a lab measurement and will vary by device and network; WebKit device emulation does not replace testing on physical iOS hardware.
 

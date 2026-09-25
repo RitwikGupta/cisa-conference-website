@@ -1,12 +1,8 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { file, glob } from 'astro/loaders';
+import { publicationFields as publication, deadlineSchema } from './lib/content-schemas';
 
-const publication = {
-  edition: z.number().int(),
-  status: z.enum(['draft', 'published']),
-  source: z.string().min(1),
-};
 const participationLink = z.object({
   url: z.url({ protocol: /^https$/ }),
   label: z.string(),
@@ -97,13 +93,7 @@ const program = defineCollection({
 });
 const deadlines = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/deadlines' }),
-  schema: z.object({
-    ...publication,
-    title: z.string(),
-    dateLabel: z.string(),
-    datetime: z.iso.datetime({ offset: true }),
-    order: z.number().default(0),
-  }),
+  schema: deadlineSchema,
 });
 const organizers = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/organizers' }),

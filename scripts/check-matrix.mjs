@@ -48,6 +48,15 @@ try {
     path.join(fixtureRoot, 'src/content/deadlines/fixture.yaml'),
     `edition: 2027\nstatus: published\nsource: Test only\ntitle: Fixture submission deadline\ndateLabel: January 29, 2027, 11:59 p.m. Eastern\ndatetime: '2027-01-29T23:59:00-05:00'\norder: 1\n`,
   );
+  for (const [name, edition, status] of [
+    ['old', 2026, 'published'],
+    ['pending', 2027, 'draft'],
+  ]) {
+    await writeFile(
+      path.join(fixtureRoot, `src/content/deadlines/${name}.yaml`),
+      `edition: ${edition}\nstatus: ${status}\nsource: Test only\ntitle: DO_NOT_PUBLISH\ndateLabel: January 1, 2027\ndate: '2027-01-01'\norder: 0\n`,
+    );
+  }
   for (const env of [
     {
       SITE_URL: 'https://example.github.io',

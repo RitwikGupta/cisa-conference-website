@@ -61,7 +61,9 @@ Times are in `America/New_York`, the conference’s local timezone. Omit `date`,
 
 ## Deadlines
 
-Duplicate the deadline example. `datetime` must include a timezone offset; `dateLabel` must explicitly state the deadline’s timezone. The example’s date is fictional and unpublished. Published deadlines appear on Home and Contribute.
+Duplicate the deadline example and supply exactly one of `date` (an ISO date such as `'2026-12-01'`) or `datetime` (a timestamp with a timezone offset). Use `date` when only a calendar date has been confirmed; do not add a cutoff time or convert the date between timezones. Include the year in `dateLabel`; for a timed deadline, also state the time and timezone. The edition remains `2027` even for the December 2026 proposal deadline.
+
+Published deadlines appear on Home and Call for Papers through the same component. The `advance-registration` record also appears on Attend. The six published flyer dates are current; the example remains fictional and unpublished. Replace `date` with `datetime` when an exact cutoff is confirmed, and update the display label at the same time.
 
 ## Registration and submissions
 
@@ -86,7 +88,7 @@ Edit the event YAML once to update dates, venue, contact address, or the PDF loc
 
 ## Copy and page structure
 
-Each heading identifies its subject; each sentence provides information. Use literal headings such as “Technical program”, “Speakers”, and “Important dates”. Describe research through methods and applications. Keep VLMs, agentic imaging workflows, and cryo-EM/ET within the research scope without presenting them as confirmed sessions.
+Each heading identifies its subject; each sentence provides information. Use literal headings such as “Technical program”, “Speakers”, and “Important dates”. Describe research through methods and applications. Lead with the connection between data acquisition, forward imaging models, and reconstruction, including engineering practice and standardization. Explain VLMs, agentic imaging workflows, and cryo-EM/ET through their contribution to physical imaging problems; do not present them as confirmed sessions. The HTML call retains all 17 flyer topic categories; Home and Program summarize them in six research areas with stable IDs.
 
 Avoid slogans, rhetorical questions, generic invitations, decorative labels above headings, numbered topic labels, and announcement badges. A pending notice needs one sentence, such as “Speakers will be announced.” Do not add a promotional panel to fill an empty page.
 
@@ -98,6 +100,6 @@ The footer contains conference identity, copyright, and the contact email; keep 
 
 ## Branding and images
 
-Design tokens live at the start of `src/styles/global.css`. The full-width SVG aperture background is in `src/components/Aperture.astro`; no raster or video is needed. Keep it behind the homepage introduction on warm white, with a feathered overlay protecting the text. On mobile it stays a faint cropped background, without a separate illustration block or added hero height. Keep the pause control clear of the buttons and allow pointer events only on the control. The 12-second sampling sweep repeats continuously while visible. Retain the resolved static image for reduced motion and JavaScript-disabled visits, the accessible pause/resume control, and automatic pauses when offscreen or in a hidden tab. Automatic pauses must not override a visitor’s manual pause.
+Design tokens live at the start of `src/styles/global.css`. The full-width SVG aperture background is in `src/components/Aperture.astro`; no raster or video is needed. Keep it behind the homepage introduction on warm white, with a feathered overlay protecting the text. On mobile it stays a faint cropped background, without a separate illustration block or added hero height. Keep the pause control clear of the buttons and allow pointer events only on the control. The 12-second sequence collects measurements over seconds 0–8, holds the resolved pair over seconds 8–10, and crossfades back to the initial estimate over seconds 10–12. The sampling arc sits on the right, with signal pulses traveling inward toward the reconstruction. SVG states depict an overlapping estimate, an intermediate pair, and two resolved features; this is a schematic, not a quantitative reconstruction simulation. Keep the strongest contrast outside the copy area. Retain the resolved static image for reduced motion and JavaScript-disabled visits, the accessible pause/resume control, and automatic pauses when offscreen or in a hidden tab. Automatic pauses must not override a visitor’s manual pause.
 
 For a new edition, update the current event selection in `src/lib/content.ts`, the wordmark year, page copy, calendar UID, and metadata tests together. This release intentionally does not provide an automatic annual rollover.
