@@ -53,20 +53,95 @@ test('keyboard skip link reaches main content', async ({ page }) => {
   await expect(page).toHaveURL(/#main$/);
 });
 
-test('artwork finishes, can replay, and respects reduced motion', async ({ page }) => {
+test('artwork loops, pauses by keyboard, and respects reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const art = page.locator('[data-aperture]');
+  const signal = art.locator('.aperture-signal').first();
+  await art.scrollIntoViewIfNeeded();
+  await expect(art).toHaveClass(/is-running/);
+  const elapsed = () => signal.evaluate((el) => Number(el.getAnimations()[0]?.currentTime || 0));
+  const before = await elapsed();
+  await expect.poll(elapsed).toBeGreaterThan(before + 100);
+  const timing = await signal.evaluate((el) => {
+    const animation = el.getAnimations()[0];
+    return {
+      duration: animation.effect!.getTiming().duration,
+      repeats: animation.effect!.getTiming().iterations === Infinity,
+    };
+  });
+  expect(timing).toEqual({ duration: 12000, repeats: true });
+  await expect(art.locator('.aperture-focus')).toHaveCSS('filter', 'none');
+  const pause = page.getByRole('button', { name: 'Pause aperture animation', exact: true });
+  await pause.focus();
+  await page.keyboard.press('Space');
+  const resume = page.getByRole('button', { name: 'Resume aperture animation', exact: true });
+  await expect(resume).toBeFocused();
+  await expect(art).not.toHaveClass(/is-running/);
+  await expect(signal).toHaveCSS('animation-play-state', 'paused');
+  await page.keyboard.press('Enter');
+  await expect(art).toHaveClass(/is-running/);
+
+  // Check both sides of the cycle boundary without a slow wall-clock sleep.
+  const boundary = await art.evaluate((figure) => {
+    const signals = [...figure.querySelectorAll('.aperture-signal')];
+    const sample = (time: number) =>
+      signals.map((el) => {
+        const animation = el.getAnimations()[0];
+        animation.pause();
+        animation.currentTime = time;
+        return Number(getComputedStyle(el).opacity);
+      });
+    const before = sample(23990);
+    const after = sample(24010);
+    signals.forEach((el) => el.getAnimations()[0].play());
+    return { before, after };
+  });
+  boundary.before.forEach((value, i) =>
+    expect(Math.abs(value - boundary.after[i])).toBeLessThan(0.01),
+  );
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(pause).toBeHidden();
+  await expect(signal).toHaveCSS('animation-name', 'none');
+  await expect(signal).toHaveCSS('opacity', '0.65');
+  await expect(art.locator('.aperture-focus')).toHaveCSS('filter', 'none');
+});
+
+test('artwork pauses out of view and in hidden tabs without overriding a manual pause', async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
   const art = page.locator('[data-aperture]');
   await art.scrollIntoViewIfNeeded();
-  const replay = page.getByRole('button', { name: /Replay the four-second/ });
-  await expect(replay).toBeEnabled({ timeout: 7000 });
-  await replay.click();
   await expect(art).toHaveClass(/is-running/);
-  await expect(replay).toBeDisabled();
-  await expect(replay).toBeEnabled({ timeout: 7000 });
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(replay).toBeHidden();
+  await page.locator('footer').scrollIntoViewIfNeeded();
   await expect(art).not.toHaveClass(/is-running/);
+  await art.scrollIntoViewIfNeeded();
+  await expect(art).toHaveClass(/is-running/);
+
+  // Headless browsers keep tabs visible. Dispatch the browser lifecycle event
+  // with its visibility value to exercise the same handler in both engines.
+  const visibility = (hidden: boolean) =>
+    page.evaluate((value) => {
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => value });
+      document.dispatchEvent(new Event('visibilitychange'));
+    }, hidden);
+  await visibility(true);
+  await expect(art).not.toHaveClass(/is-running/);
+  await visibility(false);
+  await expect(art).toHaveClass(/is-running/);
+  await page.getByRole('button', { name: 'Pause aperture animation', exact: true }).click();
+  await page.locator('footer').scrollIntoViewIfNeeded();
+  await visibility(true);
+  await visibility(false);
+  await art.scrollIntoViewIfNeeded();
+  await expect(art).not.toHaveClass(/is-running/);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await expect(art).not.toHaveClass(/is-running/);
+  await page.getByRole('button', { name: 'Resume aperture animation', exact: true }).click();
+  await expect(art).toHaveClass(/is-running/);
 });
 
 test('essential pages and navigation work without JavaScript', async ({ browser }) => {
@@ -78,7 +153,9 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
   await page.goto('http://127.0.0.1:4321/');
   await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
-  await expect(page.getByRole('button', { name: /Replay/ })).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Pause aperture animation' })).toBeHidden();
+  await expect(page.locator('.aperture-signal').first()).toHaveCSS('animation-name', 'none');
+  await expect(page.getByRole('img', { name: 'Synthetic-aperture imaging' })).toBeVisible();
   await page.getByRole('link', { name: 'Technical program', exact: true }).click();
   await expect(page.locator('#research-themes')).toBeVisible();
   await page.goto('http://127.0.0.1:4321/attend/');

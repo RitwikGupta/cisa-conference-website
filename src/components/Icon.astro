@@ -1,6 +1,6 @@
 ---
 interface Props {
-  name: 'external' | 'download' | 'replay';
+  name: 'external' | 'download' | 'pause' | 'play';
   size?: number;
   class?: string;
 }
@@ -29,9 +29,6 @@ const { name, size = 24, class: className } = Astro.props;
       <path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4" />
     </>
   )}
-  {name === 'replay' && (
-    <>
-      <path d="M4 9a8 8 0 1 1 0 7M4 3v6h6" />
-    </>
-  )}
+  {name === 'pause' && <path d="M8 5v14M16 5v14" />}
+  {name === 'play' && <path d="m8 5 11 7-11 7Z" />}
 </svg>

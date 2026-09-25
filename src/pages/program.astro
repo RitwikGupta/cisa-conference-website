@@ -38,17 +38,19 @@ const dateLabel = (date: string) =>
       </div>
     </div>
   </div>
-  <section class="section wrap" id="research-themes">
-    <div class="section-top">
-      <div>
-        <h2>Research topics</h2>
-        <p class="section-intro">
-          These topics describe the conference’s research scope. Sessions and tutorials are listed
-          separately when confirmed.
-        </p>
+  <section class="section research-surface program-research" id="research-themes">
+    <div class="wrap">
+      <div class="section-top">
+        <div>
+          <h2>Research topics</h2>
+          <p class="section-intro">
+            These topics describe the conference’s research scope. Sessions and tutorials are listed
+            separately when confirmed.
+          </p>
+        </div>
       </div>
+      <Themes expanded />
     </div>
-    <Themes expanded />
   </section>
   {highlights.length > 0 && (
     <section class="section wrap border-section">

@@ -92,10 +92,10 @@ Avoid slogans, rhetorical questions, generic invitations, decorative labels abov
 
 Page Markdown has `title`, `description`, and an optional `intro`. Omit `intro` when it repeats the title or body. Supporting page titles should be literal, while the homepage heading uses the official name from the shared event record. Research topics and their plain-text examples are maintained in `src/data/themes.yaml`.
 
-Use ordinary links for navigation. Buttons are reserved for submission, registration, downloads, and interactive controls. Speaker roles and session types are factual metadata, displayed as ordinary text alongside their associated content.
+Use ordinary links for navigation. Buttons are used for submission, registration, downloads, and interactive controls. The homepage’s Technical program and Call for papers navigation links are an intentional exception: they use filled and outlined button styles respectively. Speaker roles and session types are factual metadata, displayed as ordinary text alongside their associated content.
 
 ## Branding and images
 
-Design tokens live at the start of `src/styles/global.css`. The SVG aperture illustration is in `src/components/Aperture.astro`; no raster or video is needed. Retain the static resolved state, reduced-motion behavior, and replay control when editing it.
+Design tokens live at the start of `src/styles/global.css`. The SVG aperture illustration is in `src/components/Aperture.astro`; no raster or video is needed. The 12-second sampling sweep repeats continuously while visible. Retain the resolved static image for reduced motion and JavaScript-disabled visits, the accessible pause/resume control, and automatic pauses when offscreen or in a hidden tab. Automatic pauses must not override a visitor’s manual pause.
 
 For a new edition, update the current event selection in `src/lib/content.ts`, the wordmark year, page copy, calendar UID, and metadata tests together. This release intentionally does not provide an automatic annual rollover.

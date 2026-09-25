@@ -7,7 +7,18 @@ const samples = Array.from({ length: 9 }, (_, i) => {
 ---
 
 <figure class="aperture" data-aperture>
-  <svg class="aperture-svg" viewBox="0 0 480 410" fill="none" aria-hidden="true">
+  <svg
+    class="aperture-svg"
+    viewBox="0 0 480 410"
+    fill="none"
+    role="img"
+    aria-labelledby="aperture-title"
+    aria-describedby="aperture-description"
+  >
+    <title id="aperture-title">Synthetic-aperture imaging</title>
+    <desc id="aperture-description">
+      Measurements from positions along an arc contribute to two resolved image features.
+    </desc>
     <defs>
       <pattern id="aperture-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
         <circle cx="1" cy="1" r=".65" fill="#8BADBE" opacity=".27" />
@@ -33,18 +44,7 @@ const samples = Array.from({ length: 9 }, (_, i) => {
     <path d="M145 53Q-14 207 145 361" stroke="#9ADCCF" stroke-opacity=".65" stroke-width="1.4" />
     <path d="M137 37 146 53l-17 1M129 359l17 2-9 15" stroke="#9ADCCF" stroke-opacity=".65" />
     {samples.map((sample, i) => (
-      <g class="aperture-sample" style={`--sample:${i}`}>
-        <path
-          class="aperture-ray"
-          d={`M${sample.x} ${sample.y}Q214 ${sample.y} 323 178`}
-          stroke="url(#beam-gradient)"
-        />
-        <path
-          class="aperture-ray secondary-ray"
-          d={`M${sample.x} ${sample.y}Q214 ${sample.y} 323 236`}
-          stroke="url(#beam-gradient)"
-          stroke-opacity=".7"
-        />
+      <g class="aperture-sample" style={`--sweep:aperture-sample-${i}`}>
         <circle
           cx={sample.x}
           cy={sample.y}
@@ -53,7 +53,20 @@ const samples = Array.from({ length: 9 }, (_, i) => {
           stroke="#73CEBB"
           stroke-opacity=".35"
         />
-        <circle class="sample-core" cx={sample.x} cy={sample.y} r="2.7" fill="#9FF4DF" />
+        <circle cx={sample.x} cy={sample.y} r="2.7" fill="#9FF4DF" opacity=".3" />
+        <g class="aperture-signal">
+          <path
+            d={`M${sample.x} ${sample.y}Q214 ${sample.y} 323 178`}
+            stroke="url(#beam-gradient)"
+          />
+          <path
+            d={`M${sample.x} ${sample.y}Q214 ${sample.y} 323 236`}
+            stroke="url(#beam-gradient)"
+            stroke-opacity=".7"
+          />
+          <circle cx={sample.x} cy={sample.y} r="12" fill="#83F3DC" opacity=".12" />
+          <circle cx={sample.x} cy={sample.y} r="3.4" fill="#C2FFF1" />
+        </g>
       </g>
     ))}
     <g class="aperture-focus">
@@ -79,53 +92,49 @@ const samples = Array.from({ length: 9 }, (_, i) => {
     <path d="M359 160h14v95h-14" stroke="#9CBBCA" stroke-opacity=".5" />
     <path d="M65 373h74M65 369v8m74-8v8" stroke="#95B7C5" stroke-opacity=".5" />
   </svg>
-  <figcaption>
-    <span>Schematic of synthetic-aperture sampling and reconstruction.</span>
-    <button
-      class="aperture-replay"
-      type="button"
-      data-replay
-      hidden
-      aria-label="Replay the four-second aperture illustration"
-    >
-      <Icon name="replay" size={16} />
-      <span>Replay</span>
-    </button>
-  </figcaption>
+  <button
+    class="aperture-toggle"
+    type="button"
+    data-playback
+    hidden
+    aria-label="Pause aperture animation"
+    title="Pause aperture animation"
+  >
+    <Icon name="pause" size={18} class="pause-icon" />
+    <Icon name="play" size={18} class="play-icon" />
+  </button>
 </figure>
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-aperture]').forEach((figure) => {
-    const button = figure.querySelector<HTMLButtonElement>('[data-replay]')!;
+    const button = figure.querySelector<HTMLButtonElement>('[data-playback]')!;
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const stop = () => {
-      clearTimeout(timer);
-      figure.classList.remove('is-running');
-      button.disabled = false;
+    let inView = false;
+    let userPaused = false;
+    const syncPlayback = () => {
+      const motionAllowed = !motion.matches;
+      figure.classList.toggle('has-motion', motionAllowed);
+      figure.classList.toggle(
+        'is-running',
+        motionAllowed && inView && !document.hidden && !userPaused,
+      );
+      figure.classList.toggle('user-paused', userPaused);
+      button.hidden = !motionAllowed;
+      const label = userPaused ? 'Resume aperture animation' : 'Pause aperture animation';
+      button.setAttribute('aria-label', label);
+      button.title = label;
     };
-    const play = () => {
-      if (motion.matches) return;
-      stop();
-      figure.classList.add('is-running');
-      button.disabled = true;
-      timer = setTimeout(stop, 4000);
-    };
-    button.hidden = motion.matches;
-    button.addEventListener('click', play);
-    motion.addEventListener('change', () => {
-      stop();
-      button.hidden = motion.matches;
+    button.addEventListener('click', () => {
+      userPaused = !userPaused;
+      syncPlayback();
     });
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          play();
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 },
-    );
+    motion.addEventListener('change', syncPlayback);
+    document.addEventListener('visibilitychange', syncPlayback);
+    const observer = new IntersectionObserver((entries) => {
+      inView = entries.some((entry) => entry.isIntersecting);
+      syncPlayback();
+    });
+    syncPlayback();
     observer.observe(figure);
   });
 </script>

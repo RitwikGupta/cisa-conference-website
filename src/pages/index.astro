@@ -20,12 +20,18 @@ const featured = speakers.filter((speaker) => speaker.data.featured).slice(0, 3)
         {event.region}
       </p>
       <p class="hero-description">{home.data.intro}</p>
-      <div class="inline-links">
-        <a href={href('/program/')}>Technical program</a>
-        <a href={href('/contribute/')}>Call for papers</a>
+      <div class="hero-actions">
+        <a class="button" href={href('/program/')}>
+          Technical program
+        </a>
+        <a class="button button-outline" href={href('/contribute/')}>
+          Call for papers
+        </a>
       </div>
     </div>
-    <Aperture />
+    <div class="hero-artwork">
+      <Aperture />
+    </div>
   </section>
   <section class="section wrap border-section" aria-labelledby="program-heading">
     <h2 id="program-heading">Technical program and speakers</h2>
@@ -52,9 +58,11 @@ const featured = speakers.filter((speaker) => speaker.data.featured).slice(0, 3)
       </p>
     )}
   </section>
-  <section class="section wrap border-section" aria-labelledby="research-heading">
-    <h2 id="research-heading">Research topics</h2>
-    <Themes />
+  <section class="section research-surface" aria-labelledby="research-heading">
+    <div class="wrap">
+      <h2 id="research-heading">Research topics</h2>
+      <Themes />
+    </div>
   </section>
   {deadlines.length > 0 && (
     <section class="section wrap border-section">
