@@ -820,15 +820,16 @@
       background: linear-gradient(
         90deg,
         var(--paper),
-        rgb(247 248 245 / 0.92) 72%,
-        rgb(247 248 245 / 0.35)
+        rgb(247 248 245 / 0.84) 45%,
+        rgb(247 248 245 / 0.76)
       );
     }
     .aperture-svg {
-      inset: auto -80px 40px auto;
+      inset: auto 12px 114px auto;
       width: 700px;
       max-width: none;
-      height: 420px;
+      height: auto;
+      aspect-ratio: 1440 / 560;
     }
     .aperture-traces {
       display: none;

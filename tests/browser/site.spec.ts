@@ -159,6 +159,40 @@ test('artwork loops, pauses by keyboard, and respects reduced motion', async ({ 
   await expect(art.locator('.aperture-focus')).toHaveCSS('filter', 'none');
 });
 
+test('terrapin proportions and sampling arc remain intact at responsive breakpoints', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  for (const width of [320, 360, 390, 600, 694, 768, 800, 801, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    const geometry = await page.locator('[data-aperture]').evaluate((art) => {
+      const focus = art.querySelector<SVGGElement>('.aperture-focus')!;
+      const matrix = focus.getScreenCTM()!;
+      const hero = art.getBoundingClientRect();
+      return {
+        scaleX: Math.hypot(matrix.a, matrix.b),
+        scaleY: Math.hypot(matrix.c, matrix.d),
+        bounds: ['.aperture-focus', '.aperture-measurements'].map((selector) => {
+          const box = art.querySelector(selector)!.getBoundingClientRect();
+          return {
+            left: box.left - hero.left,
+            right: hero.right - box.right,
+            top: box.top - hero.top,
+            bottom: hero.bottom - box.bottom,
+          };
+        }),
+      };
+    });
+    expect(geometry.scaleX / geometry.scaleY, `artwork stretches at ${width}px`).toBeCloseTo(1, 4);
+    for (const bounds of geometry.bounds) {
+      for (const [edge, margin] of Object.entries(bounds)) {
+        expect(margin, `artwork clips at the ${edge} edge at ${width}px`).toBeGreaterThanOrEqual(8);
+      }
+    }
+  }
+});
+
 test('artwork pauses out of view and in hidden tabs without overriding a manual pause', async ({
   page,
 }) => {
