@@ -406,6 +406,8 @@
     opacity: 0.65;
   }
   .aperture-packet,
+  .aperture-echo,
+  .aperture-reception,
   .aperture-coarse,
   .aperture-intermediate {
     opacity: 0;
@@ -426,6 +428,14 @@
   }
   .aperture.has-motion .aperture-packet {
     animation-name: aperture-travel;
+    animation-delay: var(--sample-delay);
+  }
+  .aperture.has-motion .aperture-echo {
+    animation-name: aperture-return;
+    animation-delay: var(--sample-delay);
+  }
+  .aperture.has-motion .aperture-reception {
+    animation-name: aperture-receive;
     animation-delay: var(--sample-delay);
   }
   .aperture.has-motion .aperture-coarse {
@@ -454,20 +464,51 @@
   @keyframes aperture-travel {
     0% {
       opacity: 0;
-      stroke-dashoffset: 100;
+      stroke-dashoffset: 12;
     }
-    1% {
+    0.5% {
       opacity: 1;
-      stroke-dashoffset: 100;
+      stroke-dashoffset: 12;
     }
-    6.5% {
+    3.667% {
       opacity: 1;
-      stroke-dashoffset: 0;
+      stroke-dashoffset: -100;
+    }
+    4%,
+    100% {
+      opacity: 0;
+      stroke-dashoffset: -100;
+    }
+  }
+  @keyframes aperture-return {
+    0%,
+    3.667% {
+      opacity: 0;
+      stroke-dashoffset: -100;
+    }
+    4% {
+      opacity: 1;
+      stroke-dashoffset: -100;
+    }
+    7.167% {
+      opacity: 1;
+      stroke-dashoffset: 12;
     }
     7.5%,
     100% {
       opacity: 0;
-      stroke-dashoffset: 0;
+      stroke-dashoffset: 12;
+    }
+  }
+  @keyframes aperture-receive {
+    0%,
+    7%,
+    8.25%,
+    100% {
+      opacity: 0;
+    }
+    7.333% {
+      opacity: 1;
     }
   }
   @keyframes aperture-coarse {

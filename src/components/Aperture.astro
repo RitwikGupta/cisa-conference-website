@@ -25,9 +25,10 @@ const samples = Array.from({ length: 9 }, (_, i) => {
   >
     <title id="aperture-title">Synthetic-aperture imaging</title>
     <desc id="aperture-description">
-      Schematic of measurements collected at nine positions reconstructing a terrapin. As
-      measurements accumulate, a blurred estimate resolves into the turtle’s outline and shell
-      pattern, a reference to the University of Maryland.
+      Schematic of measurements collected at nine positions reconstructing a terrapin. Pulses travel
+      to the turtle and reflected echoes return to each sampling position, which briefly lights up
+      on reception. As measurements accumulate, a blurred estimate resolves into the turtle’s
+      outline and shell pattern, a reference to the University of Maryland.
     </desc>
     <defs>
       <radialGradient id="reconstruction-glow">
@@ -103,10 +104,30 @@ const samples = Array.from({ length: 9 }, (_, i) => {
               stroke="#06676B"
               stroke-width="2.8"
               stroke-linecap="round"
-              stroke-dasharray="10 90"
-              stroke-dashoffset="100"
+              stroke-dasharray="12 120"
+              stroke-dashoffset="12"
             />
           ))}
+          {sample.paths.map((d) => (
+            <path
+              d={d}
+              class="aperture-echo aperture-motion"
+              pathLength="100"
+              stroke="#0C9297"
+              stroke-width="3.6"
+              stroke-linecap="round"
+              stroke-dasharray="12 120"
+              stroke-dashoffset="-100"
+            />
+          ))}
+          <circle
+            class="aperture-reception aperture-motion"
+            cx={sample.x}
+            cy={sample.y}
+            r="11"
+            stroke="#0C9297"
+            stroke-width="2.2"
+          />
         </g>
       ))}
     </g>

@@ -156,6 +156,8 @@ test('artwork loops, pauses by keyboard, and respects reduced motion', async ({ 
   await expect(art.locator('.aperture-resolved')).toHaveCSS('opacity', '1');
   await expect(art.locator('.aperture-coarse')).toHaveCSS('opacity', '0');
   await expect(art.locator('.aperture-packet').first()).toHaveCSS('opacity', '0');
+  await expect(art.locator('.aperture-echo').first()).toHaveCSS('opacity', '0');
+  await expect(art.locator('.aperture-reception').first()).toHaveCSS('opacity', '0');
   await expect(art.locator('.aperture-focus')).toHaveCSS('filter', 'none');
 });
 
@@ -247,6 +249,7 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
   ).toHaveAccessibleDescription(/reconstructing a terrapin/);
   await expect(page.locator('.aperture-resolved')).toHaveCSS('opacity', '1');
   await expect(page.locator('.aperture-coarse')).toHaveCSS('opacity', '0');
+  await expect(page.locator('.aperture-echo').first()).toHaveCSS('opacity', '0');
   await page.getByRole('link', { name: 'Technical program', exact: true }).click();
   await expect(page.locator('#research-themes')).toBeVisible();
   await page.goto('http://127.0.0.1:4321/attend/');
@@ -298,7 +301,7 @@ test('200% page-zoom equivalent reflow retains content and controls', async ({ b
   await context.close();
 });
 
-test('measurement pulses travel and reconstruction resolves before the cycle fades', async ({
+test('pulses return to each sensor before reconstruction resolves and the cycle fades', async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -324,16 +327,38 @@ test('measurement pulses travel and reconstruction resolves before the cycle fad
         packet: parseFloat(
           getComputedStyle(figure.querySelector('.aperture-packet')!).strokeDashoffset,
         ),
+        echo: parseFloat(
+          getComputedStyle(figure.querySelector('.aperture-echo')!).strokeDashoffset,
+        ),
+        outbound: [...figure.querySelectorAll('.aperture-packet')].map((el) =>
+          Number(getComputedStyle(el).opacity),
+        ),
+        echoes: [...figure.querySelectorAll('.aperture-echo')].map((el) =>
+          Number(getComputedStyle(el).opacity),
+        ),
+        receptions: [...figure.querySelectorAll('.aperture-reception')].map((el) =>
+          Number(getComputedStyle(el).opacity),
+        ),
       };
     }, time);
   expect(await phase(0)).toMatchObject({ coarse: 1, intermediate: 0, resolved: 0 });
   for (let i = 0; i < 9; i++) {
     const state = await phase(400 + i * 850);
     expect(state.signals[i]).toBeGreaterThan(0.9);
+    expect(state.outbound[i * 2]).toBe(1);
+    expect(state.echoes[i * 2]).toBe(0);
+    const returning = await phase(700 + i * 850);
+    expect(returning.outbound[i * 2]).toBe(0);
+    expect(returning.echoes[i * 2]).toBe(1);
+    expect((await phase(1000 + i * 850)).receptions[i]).toBeGreaterThan(0.5);
   }
   const start = await phase(300);
   const later = await phase(600);
   expect(later.packet).toBeLessThan(start.packet);
+  expect((await phase(800)).echo).toBeGreaterThan((await phase(650)).echo);
+  const complete = await phase(8000);
+  expect(complete.echoes.every((opacity) => opacity === 0)).toBe(true);
+  expect(complete.receptions.every((opacity) => opacity === 0)).toBe(true);
   expect((await phase(4500)).intermediate).toBe(1);
   expect(await phase(9000)).toMatchObject({ coarse: 0, intermediate: 0, resolved: 1 });
   expect((await phase(10000)).resolved).toBeGreaterThan(0.99);
