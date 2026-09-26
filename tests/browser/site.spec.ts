@@ -128,6 +128,7 @@ test('artwork loops, pauses by keyboard, and respects reduced motion', async ({ 
   await expect(resume).toBeFocused();
   await expect(art).not.toHaveClass(/is-running/);
   await expect(signal).toHaveCSS('animation-play-state', 'paused');
+  await expect(art.locator('.aperture-camera')).toHaveCSS('animation-play-state', 'paused');
   await page.keyboard.press('Enter');
   await expect(art).toHaveClass(/is-running/);
 
@@ -142,16 +143,25 @@ test('artwork loops, pauses by keyboard, and respects reduced motion', async ({ 
         return Number(getComputedStyle(el).opacity);
       });
     const before = sample(23990);
+    const cameraBefore = figure.querySelector<SVGGElement>('.aperture-camera')!.getScreenCTM()!;
     const after = sample(24010);
+    const cameraAfter = figure.querySelector<SVGGElement>('.aperture-camera')!.getScreenCTM()!;
     signals.forEach((el) => el.getAnimations()[0].play());
-    return { before, after };
+    return {
+      before,
+      after,
+      cameraJump: Math.hypot(cameraAfter.e - cameraBefore.e, cameraAfter.f - cameraBefore.f),
+    };
   });
   boundary.before.forEach((value, i) =>
     expect(Math.abs(value - boundary.after[i])).toBeLessThan(0.01),
   );
+  // Allow subpixel travel across the 20ms interval, but no visible position jump.
+  expect(boundary.cameraJump).toBeLessThan(0.5);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(pause).toBeHidden();
   await expect(signal).toHaveCSS('animation-name', 'none');
+  await expect(art.locator('.aperture-camera')).toHaveCSS('animation-name', 'none');
   await expect(signal).toHaveCSS('opacity', '0.65');
   await expect(art.locator('.aperture-resolved')).toHaveCSS('opacity', '1');
   await expect(art.locator('.aperture-coarse')).toHaveCSS('opacity', '0');
@@ -243,6 +253,7 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
   await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
   await expect(page.getByRole('button', { name: 'Pause aperture animation' })).toBeHidden();
   await expect(page.locator('.aperture-signal').first()).toHaveCSS('animation-name', 'none');
+  await expect(page.locator('.aperture-camera')).toHaveCSS('animation-name', 'none');
   await expect(page.getByRole('img', { name: 'Synthetic-aperture imaging' })).toBeVisible();
   await expect(
     page.getByRole('img', { name: 'Synthetic-aperture imaging' }),
@@ -301,7 +312,7 @@ test('200% page-zoom equivalent reflow retains content and controls', async ({ b
   await context.close();
 });
 
-test('pulses return to each sensor before reconstruction resolves and the cycle fades', async ({
+test('echoes intercept the moving camera before reconstruction resolves and the cycle fades', async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -317,7 +328,27 @@ test('pulses return to each sensor before reconstruction resolves and the cycle 
       });
       const opacity = (selector: string) =>
         Number(getComputedStyle(figure.querySelector(selector)!).opacity);
+      const camera = figure.querySelector<SVGGElement>('.aperture-camera')!.getScreenCTM()!;
+      const cameraBox = figure.querySelector('.aperture-camera')!.getBoundingClientRect();
+      const heroBox = figure.getBoundingClientRect();
+      const origins = (selector: string) =>
+        [...figure.querySelectorAll<SVGPathElement>(selector)].map((path) => {
+          const point = path.getPointAtLength(0);
+          const matrix = path.getScreenCTM()!;
+          return {
+            x: matrix.a * point.x + matrix.c * point.y + matrix.e,
+            y: matrix.b * point.x + matrix.d * point.y + matrix.f,
+          };
+        });
       return {
+        camera: { x: camera.e, y: camera.f },
+        cameraFits:
+          cameraBox.left >= heroBox.left + 8 &&
+          cameraBox.right <= heroBox.right - 8 &&
+          cameraBox.top >= heroBox.top + 8 &&
+          cameraBox.bottom <= heroBox.bottom - 8,
+        emitted: origins('.aperture-packet'),
+        received: origins('.aperture-echo'),
         coarse: opacity('.aperture-coarse'),
         intermediate: opacity('.aperture-intermediate'),
         resolved: opacity('.aperture-resolved'),
@@ -341,15 +372,30 @@ test('pulses return to each sensor before reconstruction resolves and the cycle 
         ),
       };
     }, time);
-  expect(await phase(0)).toMatchObject({ coarse: 1, intermediate: 0, resolved: 0 });
+  expect(await phase(0)).toMatchObject({
+    coarse: 1,
+    intermediate: 0,
+    resolved: 0,
+    cameraFits: true,
+  });
+  const distance = (a: { x: number; y: number }, b: { x: number; y: number }) =>
+    Math.hypot(a.x - b.x, a.y - b.y);
   for (let i = 0; i < 9; i++) {
+    const emission = await phase(160 + i * 850);
+    expect(emission.cameraFits).toBe(true);
+    expect(distance(emission.camera, emission.emitted[i * 2])).toBeLessThan(0.1);
+    expect((await phase(200 + i * 850)).signals[i]).toBeGreaterThan(0.9);
     const state = await phase(400 + i * 850);
-    expect(state.signals[i]).toBeGreaterThan(0.9);
     expect(state.outbound[i * 2]).toBe(1);
     expect(state.echoes[i * 2]).toBe(0);
     const returning = await phase(700 + i * 850);
     expect(returning.outbound[i * 2]).toBe(0);
     expect(returning.echoes[i * 2]).toBe(1);
+    expect(distance(returning.camera, emission.camera)).toBeGreaterThan(1);
+    const reception = await phase(960 + i * 850);
+    expect(reception.cameraFits).toBe(true);
+    expect(distance(reception.camera, reception.received[i * 2])).toBeLessThan(0.1);
+    expect(distance(reception.camera, returning.camera)).toBeGreaterThan(1);
     expect((await phase(1000 + i * 850)).receptions[i]).toBeGreaterThan(0.5);
   }
   const start = await phase(300);
@@ -362,6 +408,7 @@ test('pulses return to each sensor before reconstruction resolves and the cycle 
   expect((await phase(4500)).intermediate).toBe(1);
   expect(await phase(9000)).toMatchObject({ coarse: 0, intermediate: 0, resolved: 1 });
   expect((await phase(10000)).resolved).toBeGreaterThan(0.99);
+  expect((await phase(11000)).camera.y).toBeLessThan((await phase(8500)).camera.y);
   const reset = await phase(11000);
   expect(reset.coarse).toBeCloseTo(0.5, 2);
   expect(reset.resolved).toBeCloseTo(0.5, 2);

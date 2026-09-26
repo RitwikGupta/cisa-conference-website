@@ -1,16 +1,49 @@
 ---
 import Icon from './Icon.astro';
-const samples = Array.from({ length: 9 }, (_, i) => {
-  const angle = ((-62 + i * 15.5) * Math.PI) / 180;
+// One continuous camera pass, followed by a smooth return during the reconstruction hold/reset.
+const cameraAt = (time: number) => {
+  const phase = time % 12;
+  const progress =
+    phase <= 8
+      ? (1 - Math.cos((Math.PI * phase) / 8)) / 2
+      : (1 + Math.cos((Math.PI * (phase - 8)) / 4)) / 2;
+  const angle = ((-62 + progress * 124) * Math.PI) / 180;
   const x = 1060 + Math.cos(angle) * 305;
   const y = 280 + Math.sin(angle) * 230;
+  return { x, y, facing: (Math.atan2(y - 280, x - 1090) * 180) / Math.PI };
+};
+const samples = Array.from({ length: 9 }, (_, i) => {
+  const delay = 0.1 + i * 0.85;
+  const emittedAt = delay + 0.06;
+  const receivedAt = delay + 0.86;
+  const emitted = cameraAt(emittedAt);
+  const received = cameraAt(receivedAt);
+  const pathsFrom = ({ x, y }: { x: number; y: number }) =>
+    [235, 325].map((targetY) => `M${x} ${y}Q1185 ${y} 1090 ${targetY}`);
   return {
-    x,
-    y,
-    delay: 0.1 + i * 0.85,
-    paths: [235, 325].map((targetY) => `M${x} ${y}Q1185 ${y} 1090 ${targetY}`),
+    ...emitted,
+    delay,
+    emittedAt,
+    receivedAt,
+    paths: pathsFrom(emitted),
+    echoPaths: pathsFrom(received),
   };
 });
+const arcStart = cameraAt(0);
+const arcEnd = cameraAt(8);
+// Include exact emission/reception times so each ray meets the animated camera precisely.
+const cameraTimes = [
+  ...new Set([
+    ...Array.from({ length: 61 }, (_, i) => i / 5),
+    ...samples.flatMap(({ emittedAt, receivedAt }) => [emittedAt, receivedAt]),
+  ]),
+].sort((a, b) => a - b);
+const cameraFrames = cameraTimes
+  .map((time) => {
+    const { x, y, facing } = cameraAt(time);
+    return `${((time / 12) * 100).toFixed(5)}% { transform: translate(${x.toFixed(3)}px, ${y.toFixed(3)}px) rotate(${facing.toFixed(3)}deg); }`;
+  })
+  .join('\n');
 ---
 
 <figure class="aperture" data-aperture>
@@ -25,10 +58,11 @@ const samples = Array.from({ length: 9 }, (_, i) => {
   >
     <title id="aperture-title">Synthetic-aperture imaging</title>
     <desc id="aperture-description">
-      Schematic of measurements collected at nine positions reconstructing a terrapin. Pulses travel
-      to the turtle and reflected echoes return to each sampling position, which briefly lights up
-      on reception. As measurements accumulate, a blurred estimate resolves into the turtle’s
-      outline and shell pattern, a reference to the University of Maryland.
+      Schematic of measurements collected at nine positions reconstructing a terrapin. A camera
+      moves continuously along the sampling arc while pulses travel to the turtle. Reflected echoes
+      meet the camera at its new position, where a ring marks reception. As measurements accumulate,
+      a blurred estimate resolves into the turtle’s outline and shell pattern, a reference to the
+      University of Maryland.
     </desc>
     <defs>
       <radialGradient id="reconstruction-glow">
@@ -66,7 +100,7 @@ const samples = Array.from({ length: 9 }, (_, i) => {
     </g>
     <g class="aperture-measurements">
       <path
-        d={`M${samples[0].x} ${samples[0].y}A305 230 0 0 1 ${samples[8].x} ${samples[8].y}`}
+        d={`M${arcStart.x} ${arcStart.y}A305 230 0 0 1 ${arcEnd.x} ${arcEnd.y}`}
         stroke="#087F83"
         stroke-opacity=".6"
         stroke-width="1.8"
@@ -85,16 +119,15 @@ const samples = Array.from({ length: 9 }, (_, i) => {
           <circle
             cx={sample.x}
             cy={sample.y}
-            r="7"
+            r="3"
             fill="#F7F8F5"
             stroke="#087F83"
-            stroke-opacity=".7"
-            stroke-width="1.5"
+            stroke-opacity=".4"
+            stroke-width="1"
           />
-          <circle cx={sample.x} cy={sample.y} r="2.4" fill="#087F83" />
           <g class="aperture-signal aperture-motion">
-            <circle cx={sample.x} cy={sample.y} r="16" fill="#087F83" opacity=".14" />
-            <circle cx={sample.x} cy={sample.y} r="6" fill="#06676B" />
+            <circle cx={sample.x} cy={sample.y} r="9" fill="#087F83" opacity=".14" />
+            <circle cx={sample.x} cy={sample.y} r="3" fill="#06676B" />
           </g>
           {sample.paths.map((d) => (
             <path
@@ -108,7 +141,7 @@ const samples = Array.from({ length: 9 }, (_, i) => {
               stroke-dashoffset="12"
             />
           ))}
-          {sample.paths.map((d) => (
+          {sample.echoPaths.map((d) => (
             <path
               d={d}
               class="aperture-echo aperture-motion"
@@ -120,16 +153,26 @@ const samples = Array.from({ length: 9 }, (_, i) => {
               stroke-dashoffset="-100"
             />
           ))}
+        </g>
+      ))}
+      <g class="aperture-camera aperture-motion">
+        <circle r="21" fill="#F7F8F5" fill-opacity=".85" />
+        <g fill="#F7F8F5" stroke="#06676B" stroke-width="2" stroke-linejoin="round">
+          <path d="M-8-4L-16-8V8L-8 4" fill="#C4DED3" />
+          <rect x="-8" y="-9" width="21" height="18" rx="3" />
+          <path d="M-3-9V-12H6V-9" />
+          <circle cx="2.5" r="4" fill="#087F83" fill-opacity=".16" />
+        </g>
+        {samples.map((sample) => (
           <circle
             class="aperture-reception aperture-motion"
-            cx={sample.x}
-            cy={sample.y}
-            r="11"
+            style={`--sample-delay:${sample.delay}s`}
+            r="18"
             stroke="#0C9297"
             stroke-width="2.2"
           />
-        </g>
-      ))}
+        ))}
+      </g>
     </g>
     <g class="aperture-focus" transform="translate(1090 280) rotate(18)">
       <g class="aperture-coarse aperture-motion" data-reconstruction="coarse">
@@ -178,6 +221,8 @@ const samples = Array.from({ length: 9 }, (_, i) => {
     <Icon name="play" size={18} class="play-icon" />
   </button>
 </figure>
+
+<style is:inline set:html={`@keyframes aperture-camera-move {${cameraFrames}}`} />
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-aperture]').forEach((figure) => {
