@@ -20,6 +20,7 @@ const event = defineCollection({
     dateLabel: z.string(),
     timezone: z.string(),
     venue: z.string(),
+    building: z.string().optional(),
     city: z.string(),
     region: z.string(),
     country: z.string(),
@@ -97,13 +98,34 @@ const deadlines = defineCollection({
 });
 const organizers = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/organizers' }),
+  schema: ({ image }) =>
+    z.object({
+      ...publication,
+      name: z.string(),
+      role: z.string(),
+      affiliation: z.string().optional(),
+      website: z.url({ protocol: /^https?$/ }).optional(),
+      biography: z.string().optional(),
+      portrait: image().optional(),
+      order: z.number().default(0),
+    }),
+});
+const archive = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/archive/2026' }),
   schema: z.object({
-    ...publication,
-    name: z.string(),
-    role: z.string(),
-    affiliation: z.string().optional(),
-    website: z.url({ protocol: /^https?$/ }).optional(),
-    order: z.number().default(0),
+    title: z.string(),
+    description: z.string(),
+    intro: z.string().optional(),
+    order: z.number(),
   }),
 });
-export const collections = { event, pages, themes, speakers, program, deadlines, organizers };
+export const collections = {
+  event,
+  pages,
+  themes,
+  speakers,
+  program,
+  deadlines,
+  organizers,
+  archive,
+};

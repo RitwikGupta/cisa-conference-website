@@ -1,11 +1,22 @@
 ---
 import { getEntry, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import { createSatteriMarkdownProcessor } from '@astrojs/markdown-satteri';
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 import { event, organizers } from '../lib/content';
 import { href } from '../lib/urls';
 const page = (await getEntry('pages', 'about'))!;
 const { Content } = await render(page);
+const markdown = await createSatteriMarkdownProcessor({ syntaxHighlight: false });
+const organizerProfiles = await Promise.all(
+  organizers.map(async (organizer) => ({
+    ...organizer,
+    biographyHtml: organizer.data.biography
+      ? (await markdown.render(organizer.data.biography)).code
+      : undefined,
+  })),
+);
 ---
 
 <Base {...page.data} page="about">
@@ -17,17 +28,35 @@ const { Content } = await render(page);
     <section class="section border-section" id="organizers">
       <h2>Organizers</h2>
       {organizers.length ? (
-        <dl class="fact-list section-copy">
-          {organizers.map(({ data }) => (
-            <div>
-              <dt>{data.role}</dt>
-              <dd>
-                {data.website ? <a href={data.website}>{data.name}</a> : data.name}
-                {data.affiliation && <p>{data.affiliation}</p>}
-              </dd>
-            </div>
+        <div class="organizer-grid section-copy">
+          {organizerProfiles.map(({ id, data, biographyHtml }) => (
+            <article class="organizer-card" id={id}>
+              {data.portrait && (
+                <Image
+                  src={data.portrait}
+                  alt={data.name}
+                  width={128}
+                  height={128}
+                  widths={[128, 256]}
+                  sizes="96px"
+                  fit="cover"
+                  loading="lazy"
+                />
+              )}
+              <div>
+                <p class="organizer-role">{data.role}</p>
+                <h3>{data.website ? <a href={data.website}>{data.name}</a> : data.name}</h3>
+                {data.affiliation && <p class="organizer-affiliation">{data.affiliation}</p>}
+              </div>
+              {data.biography && (
+                <details class="organizer-biography">
+                  <summary>Biography</summary>
+                  <div class="prose" set:html={biographyHtml} />
+                </details>
+              )}
+            </article>
           ))}
-        </dl>
+        </div>
       ) : (
         <p class="pending">The organizing committee will be announced.</p>
       )}
@@ -63,6 +92,16 @@ const { Content } = await render(page);
       <p class="section-intro">
         For sponsorship, exhibits, or conference inquiries, contact{' '}
         <a href={`mailto:${event.email}`}>{event.email}</a>.
+      </p>
+      <p class="section-copy">
+        <a href={href('/exhibits/')}>Exhibits and sponsorship packages</a>
+      </p>
+    </section>
+    <section class="section border-section" id="past-conferences">
+      <h2>Past conferences</h2>
+      <p class="section-intro">
+        <a href={href('/2026/')}>2026 archive</a> · University at Albany, Albany, New York · May
+        26–29, 2026
       </p>
     </section>
   </div>

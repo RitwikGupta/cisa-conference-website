@@ -15,8 +15,8 @@ const registrationDeadlines = deadlines.filter((entry) => entry.id === 'advance-
   <PageIntro {...page.data} />
   <div class="wrap intro-actions">
     <p class="event-details">
-      <time datetime={event.startDate}>{event.dateLabel}</time> · {event.venue} · {event.city},{' '}
-      {event.region}
+      <time datetime={event.startDate}>{event.dateLabel}</time> · {event.building}, {event.venue} ·{' '}
+      {event.city}, {event.region}
     </p>
   </div>
   <div class="wrap page-content content-columns">
@@ -59,7 +59,10 @@ const registrationDeadlines = deadlines.filter((entry) => entry.id === 'advance-
       </details>
       <details>
         <summary>Where on campus will the conference take place?</summary>
-        <p>The building, rooms, and arrival instructions will be announced.</p>
+        <p>
+          The conference will take place at the {event.building}. Rooms and arrival instructions
+          will be announced.
+        </p>
       </details>
       <details>
         <summary>When will registration and hotel information be available?</summary>

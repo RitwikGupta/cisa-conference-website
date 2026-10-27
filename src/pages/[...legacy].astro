@@ -8,6 +8,7 @@ export function getStaticPaths() {
   }));
 }
 const { target } = Astro.props;
+const archived = target.startsWith('/2026/');
 ---
 
 <!doctype html>
@@ -24,7 +25,11 @@ const { target } = Astro.props;
     <main>
       <h1>This CISA page has moved.</h1>
       <p>
-        <a href={href(target)}>Continue to the updated CISA 2027 page.</a>
+        <a href={href(target)}>
+          {archived
+            ? 'Continue to the archived 2026 page.'
+            : 'Continue to the updated CISA 2027 page.'}
+        </a>
       </p>
     </main>
   </body>

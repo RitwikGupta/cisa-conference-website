@@ -1,0 +1,19 @@
+edition: 2027
+status: published
+name: Bobby Jackson
+role: Technical Program
+affiliation: Argonne National Laboratory
+portrait: ./portraits/bobby-jackson.webp
+website: https://www.anl.gov/profile/bhupendra-a-raut
+order: 5
+biography: >-
+  Bobby Jackson is an Atmospheric Scientist at Argonne National Laboratory
+  whose expertise includes radar meteorology, AI for meteorological
+  observations, and boundary layer processes. He earned his Ph.D. in
+  Atmospheric Sciences at the University of Illinois Urbana-Champaign in 2015
+  and completed a postdoctoral appointment at the University of Wyoming.
+  At Argonne, he leads development of scanning weather radar products for
+  the Department of Energy's Atmospheric Radiation Measurement Facility
+  and Integrated Energy Systems Office. He also develops AI and machine
+  learning workflows for ARM data quality control and self-driven
+  boundary layer sensing systems.

@@ -1,0 +1,157 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import ConferenceHome from '../../components/ConferenceHome.astro';
+import SpeakerCard from '../../components/SpeakerCard.astro';
+import DeadlineList from '../../components/DeadlineList.astro';
+import Themes from '../../components/Themes.astro';
+import SponsorPackages from '../../components/SponsorPackages.astro';
+import { conference2026, speakers2026, deadlines2026, themes2026 } from '../../data/archive-2026';
+import { href } from '../../lib/urls';
+export async function getStaticPaths() {
+  const pages = await getCollection('archive');
+  const aliases: Record<string, string> = { keynotes: 'speakers', submissions: 'contribute' };
+  return pages.flatMap((entry) => {
+    const canonical = aliases[entry.id] ?? entry.id;
+    const paths = canonical === entry.id ? [canonical] : [canonical, entry.id];
+    return paths.map((path) => ({
+      params: { page: path === 'overview' ? undefined : path },
+      props: { entry, pageId: canonical === 'overview' ? 'home' : canonical },
+    }));
+  });
+}
+const { entry, pageId } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base
+  title={entry.data.title}
+  description={entry.data.description}
+  conference={conference2026}
+  page={pageId}
+>
+  {pageId === 'home' ? (
+    <ConferenceHome
+      event={conference2026}
+      intro={entry.data.intro}
+      prefix="/2026"
+      programAvailable
+      speakersAvailable
+      featured={speakers2026.slice(0, 3)}
+      deadlines={deadlines2026}
+      topics={themes2026}
+    >
+      <Content />
+    </ConferenceHome>
+  ) : (
+    <>
+      <PageIntro {...entry.data} />
+      {pageId === 'attend' && (
+        <div class="wrap intro-actions">
+          <p class="event-details">
+            <time datetime={conference2026.startDate}>{conference2026.dateLabel}</time> ·{' '}
+            {conference2026.venue} · {conference2026.city}, {conference2026.region}
+          </p>
+        </div>
+      )}
+      <div
+        class:list={[
+          'wrap',
+          'page-content',
+          { 'content-columns': ['attend', 'contribute'].includes(pageId) },
+        ]}
+      >
+        <div>
+          {pageId === 'speakers' && (
+            <div class="speaker-grid">
+              {speakers2026.map((speaker) => (
+                <SpeakerCard
+                  speaker={speaker}
+                  headingLevel="h2"
+                  profileBase="/2026/speakers/"
+                  profileFragments
+                />
+              ))}
+            </div>
+          )}
+          <article class:list={['prose', { 'section-copy': pageId === 'speakers' }]}>
+            <Content />
+          </article>
+          {pageId === 'exhibits' && (
+            <>
+              <section class="section border-section" id="sponsor-packages">
+                <h2>Sponsor packages</h2>
+                <p class="section-intro">Platinum and Gold packages include exhibit booth space.</p>
+                <SponsorPackages edition={2026} />
+                <h2 class="section-copy">2026 Prospectus</h2>
+                <div class="prospectus-grid section-copy">
+                  <figure>
+                    <a href={href('/archive/2026/prospectus/sponsor-packages.png')}>
+                      <img
+                        src={href('/archive/2026/prospectus/sponsor-packages.png')}
+                        alt="Original 2026 sponsor package comparison, transcribed in the table above"
+                        width="720"
+                        height="960"
+                        loading="lazy"
+                      />
+                    </a>
+                    <figcaption>Sponsor packages</figcaption>
+                  </figure>
+                  <figure>
+                    <a href={href('/archive/2026/prospectus/why-exhibit.png')}>
+                      <img
+                        src={href('/archive/2026/prospectus/why-exhibit.png')}
+                        alt="Why Exhibit at CISA 2026? Original prospectus page about opportunities in Albany"
+                        width="720"
+                        height="960"
+                        loading="lazy"
+                      />
+                    </a>
+                    <figcaption>Why exhibit at CISA 2026?</figcaption>
+                  </figure>
+                </div>
+              </section>
+              <section class="section border-section" id="contact">
+                <h2>Exhibitor and sponsor inquiries</h2>
+                <p class="section-intro">
+                  Contact <a href={`mailto:${conference2026.email}`}>{conference2026.email}</a> for
+                  conference inquiries.
+                </p>
+              </section>
+            </>
+          )}
+        </div>
+        {pageId === 'contribute' && (
+          <aside class="sidebar-stack" aria-label="Submission information">
+            <section class="sidebar-section">
+              <h2>Submission information</h2>
+              <p>Submissions for CISA 2026 have closed.</p>
+            </section>
+            <section class="sidebar-section">
+              <h2>Important dates</h2>
+              <DeadlineList entries={deadlines2026} />
+            </section>
+          </aside>
+        )}
+        {pageId === 'attend' && (
+          <aside class="sidebar-stack" aria-label="Conference details">
+            <section class="sidebar-section">
+              <h2>Registration</h2>
+              <p>Registration for CISA 2026 has closed.</p>
+              <p>Tutorials were included in the conference registration fee.</p>
+            </section>
+          </aside>
+        )}
+      </div>
+      {pageId === 'program' && (
+        <section class="section research-surface program-research" id="research-themes">
+          <div class="wrap">
+            <h2>Research topics</h2>
+            <Themes entries={themes2026} expanded programPath="/2026/program/" />
+          </div>
+        </section>
+      )}
+    </>
+  )}
+</Base>

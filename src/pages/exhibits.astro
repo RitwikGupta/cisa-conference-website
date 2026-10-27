@@ -1,0 +1,37 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import SponsorPackages from '../components/SponsorPackages.astro';
+import { event } from '../lib/content';
+const page = (await getEntry('pages', 'exhibits'))!;
+const { Content } = await render(page);
+---
+
+<Base {...page.data} page="exhibits">
+  <PageIntro {...page.data} />
+  <div class="wrap page-content">
+    <article class="prose">
+      <Content />
+    </article>
+    <section class="section border-section" id="sponsor-packages">
+      <h2>Sponsor packages</h2>
+      <p class="section-intro">
+        Choose the level of support that fits your institution. Platinum and Gold packages include
+        exhibit booth space.
+      </p>
+      <SponsorPackages />
+    </section>
+    <section class="section border-section" id="contact">
+      <h2>Exhibitor and sponsor inquiries</h2>
+      <p class="section-intro">
+        Contact{' '}
+        <a href={`mailto:${event.email}?subject=CISA%202027%20sponsorship%20and%20exhibits`}>
+          {event.email}
+        </a>{' '}
+        to discuss a package, exhibit space, or a workshop or panel. Include your institution and
+        the package or opportunity that interests you.
+      </p>
+    </section>
+  </div>
+</Base>

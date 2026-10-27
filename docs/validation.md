@@ -1,5 +1,28 @@
 # Validation record
 
+## Shared edition layout — October 11, 2026
+
+- Both editions use the shared homepage component, header navigation, speaker cards, topic grids, deadline lists, and page styles. The 2026 archive banner and index were removed.
+- The 2026 homepage and navigation use Albany dates and venue, four keynote speakers, the SAR tutorial, historical submission guidance and deadlines, climate initiative, and independent sponsorship packages. Existing keynote and submission URLs remain valid.
+- Astro check has zero errors, warnings, or hints; six unit tests pass. All 40 HTML pages pass internal-link and metadata checks in root and GitHub project deployments, plus the populated fixture.
+- All 76 Chromium and mobile WebKit browser tests pass. Eighteen current and 2026 pages pass overflow and accessibility checks at five widths. Edition switching, matching homepage sections and navigation, 2026 speaker biography links, tutorials, and submission dates are verified.
+- Visually reviewed the new 2026 homepage on desktop and mobile. The full historical timetable and committee roster remain unavailable and are not inferred from the current edition.
+
+## Migration and 2026 archive — October 11, 2026
+
+Validated with Node 24.19.0:
+
+- Astro check: zero errors, warnings, or hints; six unit tests passed.
+- Production builds and internal-link checks passed for the GitHub Pages project path and custom-domain root, plus the populated fixture. Current and archived metadata use their respective conference dates and venues.
+- All 60 Chromium and mobile WebKit browser tests passed. Thirteen current/archive pages were checked at 360, 390, 768, 1024, and 1440 CSS pixels with no document overflow or axe WCAG A/AA violations.
+- Migration checks verify eight organizer profiles, expandable biographies, the Iribe Center, historical redirects, the 2026 OpenReview destination only in the archive, and the pending current submission portal and speakers.
+- Package checks verify all four approved prices and all eight benefit rows. The comparison scrolls within its own region on small screens. The archived package data is an independent snapshot.
+- Visually reviewed the current organizers, desktop/mobile sponsorship pages, archive overview, and original prospectus extracts. Corrected table overflow caused by the offscreen accessibility labels and increased the archive notice link contrast before the final passing run.
+- Confirmed the attached CFP and the existing download are identical; all six current deadlines and the 17 topic categories remain unchanged.
+- The archive preserves available legacy content and supplied prospectus extracts. A complete 2026 schedule and the source page's 2025 template binaries were not available for this migration.
+
+## Original site validation — September 25, 2026
+
 Scientific scope, call for papers, deadlines, and terrapin reconstruction animation validated September 25, 2026 using Node 24.21.0.
 
 - Astro type checking: zero errors, warnings, or hints.

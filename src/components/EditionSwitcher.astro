@@ -1,0 +1,44 @@
+---
+import { href } from '../lib/urls';
+interface Props {
+  edition: number;
+}
+const { edition } = Astro.props;
+const editions = [
+  { year: 2027, path: '/' },
+  { year: 2026, path: '/2026/' },
+];
+---
+
+<details class="edition-switcher">
+  <summary class="wordmark-year" aria-label={`Conference year, ${edition}`}>
+    {edition}
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.5" />
+    </svg>
+  </summary>
+  <nav class="edition-options" aria-label="Conference year">
+    {editions.map(({ year, path }) => (
+      <a href={href(path)} aria-current={year === edition ? 'true' : undefined}>
+        {year}
+        {year === edition && <span aria-hidden="true">✓</span>}
+      </a>
+    ))}
+  </nav>
+</details>
+
+<script>
+  document.querySelectorAll<HTMLDetailsElement>('.edition-switcher').forEach((switcher) => {
+    const toggle = switcher.querySelector('summary');
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && !switcher.contains(event.target)) switcher.open = false;
+    });
+    switcher.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && switcher.open) {
+        switcher.open = false;
+        toggle?.focus();
+        event.stopPropagation();
+      }
+    });
+  });
+</script>

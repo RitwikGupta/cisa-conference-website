@@ -5,7 +5,6 @@ import { deadlineSchema } from '../src/lib/content-schemas.ts';
 const entry = {
   edition: 2027,
   status: 'published',
-  source: 'Approved 2027 call for papers',
   title: 'Proposals',
   dateLabel: 'December 1, 2026',
 };

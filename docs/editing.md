@@ -9,7 +9,6 @@ Every event-specific speaker, program item, and deadline needs:
 ```yaml
 edition: 2027
 status: draft
-source: Organizer confirmation or an authoritative source URL
 ```
 
 Change `status` to `published` only after verifying that the details apply to 2027. Records from other editions are excluded even if marked published. Keep unconfirmed information out of the repository if it is confidential: draft status prevents website publication, not access to files in a public repository.
@@ -23,7 +22,6 @@ Duplicate the draft example under `src/content/speakers/` and give it a descript
 ```yaml
 edition: 2027
 status: published
-source: Confirmed by the program chair on YYYY-MM-DD
 name: Jane Doe
 affiliation: University name
 role: Keynote speaker
@@ -45,7 +43,6 @@ Duplicate the YAML example in `src/content/program/`. `kind` must be `keynote`, 
 ```yaml
 edition: 2027
 status: published
-source: Approved 2027 program
 title: Confirmed session title
 kind: session
 description: What the session covers.
@@ -80,11 +77,34 @@ Use the same structure under `submission` for paper submissions. A link with `co
 
 ## Organizing committee
 
-Duplicate the YAML example in `src/content/organizers/`, then set the verified `name`, `role`, optional `affiliation` and `website`, and display `order`. The same edition, source, and publication rules apply. Published members replace the announcement notice on About.
+Duplicate the YAML example in `src/content/organizers/`, then set the verified `name`, `role`, optional `affiliation`, `website`, and `biography`, and display `order`. Set `portrait` to a relative image path such as `./portraits/chad-kidder.webp`. Keep `edition` and `status` to control which profiles are published. Published members appear on About with expandable biographies; filenames supply stable profile anchors.
+
+Organizer biographies support Markdown links, bold, italics, and paragraphs:
+
+```yaml
+biography: >-
+  Jane leads the [Example Lab](https://example.edu/lab).
+```
+
+Use `biography: |-` and blank lines for separate paragraphs or lists. The top-level `website` field links the organizer's name.
+
+## Exhibits and sponsorship
+
+Edit introductory prose in `src/content/pages/exhibits.md` and package prices and benefits in `src/data/sponsorship.ts`. The supplied prospectus packages were explicitly approved for 2027. Preserve the independent `src/data/sponsorship-2026.ts` snapshot when updating future prices or benefits. The inquiry link uses the shared conference email rather than the original form service.
+
+## 2026 conference
+
+Historical content is in `src/content/archive/2026/`. `overview.md` renders the homepage at `/2026/`. Both editions share `ConferenceHome.astro`, the header, page styles, speaker cards, topic grids, and deadline lists. The year selector changes editions; each edition's main navigation stays within that year. The 2026 site uses its own dates, Albany venue, speakers, topics, and deadlines from `src/data/archive-2026.ts`, without the 2027 social card.
+
+The 2026 navigation uses `/2026/program/`, `/2026/speakers/`, `/2026/contribute/`, `/2026/attend/`, `/2026/exhibits/`, and `/2026/about/`. The existing `/2026/keynotes/` and `/2026/submissions/` URLs still render their corresponding content. Tutorial and climate pages remain linked from the 2026 program.
+
+Keynotes, tutorials, historical submission guidance and OpenReview, the climate initiative, and the supplied sponsorship material belong to the archive. Current speakers and tutorials remain pending until separately confirmed. The historical Climate Change Initiative is distinct from the climate topic and deadline in the 2027 CFP.
+
+The archive preserves available information and original prospectus extracts; it is not a complete authoritative 2026 program. Do not infer a historical organizer roster from the source site's updated 2027 menu, or treat its 2025 template files as current resources.
 
 ## Shared event information
 
-Edit the event YAML once to update dates, venue, contact address, or the PDF location. The homepage, attendance details, contact links, event metadata, and calendar download use this source. Dates use quoted ISO strings. The calendar download covers all conference days without implying that conference sessions last all day.
+Edit the event YAML once to update dates, venue, building, contact address, or the PDF location. The homepage, attendance details, contact links, event metadata, and calendar download use this source. Dates use quoted ISO strings. The calendar download covers all conference days without implying that conference sessions last all day.
 
 ## Copy and page structure
 
@@ -96,7 +116,7 @@ Page Markdown has `title`, `description`, and an optional `intro`. Omit `intro` 
 
 Use ordinary links for navigation. Buttons are used for submission, registration, downloads, and interactive controls. The homepage’s Technical program and Call for papers navigation links are an intentional exception: they use filled and outlined button styles respectively. Speaker roles and session types are factual metadata, displayed as ordinary text alongside their associated content.
 
-The footer contains conference identity, copyright, and the contact email; keep navigation in the header. Present conference affiliations as logos and names without repeating the call-for-papers attribution or adding explanatory labels.
+The header's year selector switches between the current conference and the 2026 site. Maintain its options in `src/components/EditionSwitcher.astro`. The footer contains conference identity, copyright, and contact email. Keep the main navigation in the header. Present conference affiliations as logos and names without repeating the call-for-papers attribution or adding explanatory labels.
 
 ## Branding and images
 

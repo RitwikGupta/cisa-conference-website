@@ -62,6 +62,7 @@ for (const file of htmlFiles) {
   const route = relative === 'index.html' ? '' : relative.replace(/index\.html$/, '');
   const from = `${origin}${base}${route}`;
   const $ = await document(file);
+  const archived = relative.startsWith('2026/');
   const refresh = $('meta[http-equiv="refresh"]');
   if ($('h1').length !== 1) errors.push(`${relative}: expected one h1`);
   if (!$('title').text()) errors.push(`${relative}: missing title`);
@@ -74,15 +75,38 @@ for (const file of htmlFiles) {
       errors.push(`${relative}: incorrect indexing policy`);
     if ($('link[rel="canonical"]').attr('href') !== from)
       errors.push(`${relative}: incorrect canonical URL`);
-    if (!$('header').text().includes('2027'))
+    if (
+      !$('header')
+        .text()
+        .includes(archived ? '2026' : '2027')
+    )
       errors.push(`${relative}: missing conference edition`);
     const ld = JSON.parse($('script[type="application/ld+json"]').text());
-    if (ld.startDate !== '2027-06-01' || ld.endDate !== '2027-06-03')
+    if (
+      ld.startDate !== (archived ? '2026-05-26' : '2027-06-01') ||
+      ld.endDate !== (archived ? '2026-05-29' : '2027-06-03')
+    )
       errors.push(`${relative}: inconsistent conference dates`);
+    if (archived && $('.archive-notice').length)
+      errors.push(`${relative}: obsolete archive banner`);
+    if (!archived && !ld.location.name.includes('Iribe Center'))
+      errors.push(`${relative}: missing confirmed venue building`);
   }
-  const text = $('body').text();
-  if (/DO_NOT_PUBLISH|Example speaker|Example session|Example deadline|Albany|CISA 2026/.test(text))
+  const body = $('body').clone();
+  body.find('#past-conferences').remove();
+  const text = body.text();
+  if (/DO_NOT_PUBLISH|Example speaker|Example session|Example deadline/.test(text))
     errors.push(`${relative}: unpublished or stale content leaked`);
+  if (
+    !archived &&
+    !refresh.length &&
+    /Albany|CISA 2026|Harbir Antil|Davide Scaramuzza|Yu Sun|Jinwei Ye|Armin Doerry|67324X|979-8-3195-2276-4/.test(
+      text,
+    )
+  )
+    errors.push(`${relative}: historical conference content leaked into current pages`);
+  if (!archived && !refresh.length && $('a[href*="IEEE.org/CISA/2026"]').length)
+    errors.push(`${relative}: previous OpenReview portal on current page`);
   for (const el of $('a[href], link[href], script[src], img[src]').toArray()) {
     await checkUrl($(el).attr('href') || $(el).attr('src'), from, relative);
   }

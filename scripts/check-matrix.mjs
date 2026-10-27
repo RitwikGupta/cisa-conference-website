@@ -29,7 +29,7 @@ try {
   );
   await writeFile(
     path.join(speakerDir, 'fixture-current.md'),
-    `---\nedition: 2027\nstatus: published\nsource: Local automated test fixture only.\nname: Fixture Researcher With a Deliberately Long Multi-Part Name\naffiliation: An Equally Long Department of Computational Imaging and Interdisciplinary Scientific Discovery\nrole: Invited speaker\nfeatured: true\norder: 1\nportrait: ./fixture-portrait.png\nportraitCredit: Synthetic test graphic\ntalkTitle: Fixture talk about computational imaging\nabstract: A fixture abstract to verify the populated speaker layout.\n---\nFixture biography to validate the published speaker profile.\n`,
+    `---\nedition: 2027\nstatus: published\nname: Fixture Researcher With a Deliberately Long Multi-Part Name\naffiliation: An Equally Long Department of Computational Imaging and Interdisciplinary Scientific Discovery\nrole: Invited speaker\nfeatured: true\norder: 1\nportrait: ./fixture-portrait.png\nportraitCredit: Synthetic test graphic\ntalkTitle: Fixture talk about computational imaging\nabstract: A fixture abstract to verify the populated speaker layout.\n---\nFixture biography to validate the published speaker profile.\n`,
   );
   for (const [name, edition, status] of [
     ['previous', 2026, 'published'],
@@ -37,16 +37,16 @@ try {
   ]) {
     await writeFile(
       path.join(speakerDir, `fixture-${name}.md`),
-      `---\nedition: ${edition}\nstatus: ${status}\nsource: Test only\nname: DO_NOT_PUBLISH\naffiliation: Test\nrole: Test\n---\nDO_NOT_PUBLISH\n`,
+      `---\nedition: ${edition}\nstatus: ${status}\nname: DO_NOT_PUBLISH\naffiliation: Test\nrole: Test\n---\nDO_NOT_PUBLISH\n`,
     );
   }
   await writeFile(
     path.join(fixtureRoot, 'src/content/program/fixture.yaml'),
-    `edition: 2027\nstatus: published\nsource: Test only\ntitle: Fixture keynote with a very long descriptive title about computational imaging across disciplines\nkind: keynote\ndescription: Fixture session description.\ndate: '2027-06-01'\nstart: '09:00'\nend: '10:00'\nlocation: Fixture room\nspeakerIds: [fixture-current]\norder: 1\n`,
+    `edition: 2027\nstatus: published\ntitle: Fixture keynote with a very long descriptive title about computational imaging across disciplines\nkind: keynote\ndescription: Fixture session description.\ndate: '2027-06-01'\nstart: '09:00'\nend: '10:00'\nlocation: Fixture room\nspeakerIds: [fixture-current]\norder: 1\n`,
   );
   await writeFile(
     path.join(fixtureRoot, 'src/content/deadlines/fixture.yaml'),
-    `edition: 2027\nstatus: published\nsource: Test only\ntitle: Fixture submission deadline\ndateLabel: January 29, 2027, 11:59 p.m. Eastern\ndatetime: '2027-01-29T23:59:00-05:00'\norder: 1\n`,
+    `edition: 2027\nstatus: published\ntitle: Fixture submission deadline\ndateLabel: January 29, 2027, 11:59 p.m. Eastern\ndatetime: '2027-01-29T23:59:00-05:00'\norder: 1\n`,
   );
   for (const [name, edition, status] of [
     ['old', 2026, 'published'],
@@ -54,7 +54,7 @@ try {
   ]) {
     await writeFile(
       path.join(fixtureRoot, `src/content/deadlines/${name}.yaml`),
-      `edition: ${edition}\nstatus: ${status}\nsource: Test only\ntitle: DO_NOT_PUBLISH\ndateLabel: January 1, 2027\ndate: '2027-01-01'\norder: 0\n`,
+      `edition: ${edition}\nstatus: ${status}\ntitle: DO_NOT_PUBLISH\ndateLabel: January 1, 2027\ndate: '2027-01-01'\norder: 0\n`,
     );
   }
   for (const env of [

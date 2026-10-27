@@ -1,7 +1,6 @@
 ---
 edition: 2027
 status: draft
-source: Editing example only; replace with organizer confirmation before publishing.
 name: Example speaker — not an announcement
 affiliation: Example institution
 role: Invited speaker

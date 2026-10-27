@@ -1,0 +1,19 @@
+edition: 2027
+status: published
+name: Miguel Heredia Conde
+role: General Co-Chair
+affiliation: University of Wuppertal
+portrait: ./portraits/miguel-heredia-conde.webp
+website: https://ihct.uni-wuppertal.de/en/team/detail/heredia-conde/
+order: 2
+biography: >-
+  Miguel Heredia Conde received his Dr.Eng. in sensor signal processing in 2016
+  and his Habilitation in 2022 from the University of Siegen. He joined the
+  University of Wuppertal in 2023, where he heads the Computational 3D Imaging
+  research group. His interests include time-of-flight and terahertz imaging,
+  compressive sensing, computational imaging, and unconventional sensing.
+  He previously led research on compressive sensing for photonic mixer devices
+  at Siegen's Center for Sensor Systems and managed the MENELAOS research
+  training network. He chairs the IEEE Synthetic Aperture Standards Committee's
+  P3382 working group on performance metrics for MRI reconstruction. His work
+  has received awards at ICCP and CoSeRa.

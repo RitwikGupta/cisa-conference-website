@@ -1,6 +1,5 @@
 edition: 2027
 status: published
-source: https://cisa-conference.org/__static/jdj5jdewjhnowxdjstjyvm9weeg2mezq/CISA2027_CFP_V2.pdf
 name: 2027 IEEE Conference on Computational Imaging Using Synthetic Apertures
 shortName: CISA 2027
 sequence: Fourth annual conference
@@ -9,6 +8,7 @@ endDate: '2027-06-03'
 dateLabel: June 1–3, 2027
 timezone: America/New_York
 venue: University of Maryland
+building: Iribe Center
 city: College Park
 region: Maryland
 country: US

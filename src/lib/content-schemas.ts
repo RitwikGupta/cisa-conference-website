@@ -3,7 +3,6 @@ import { z } from 'astro/zod';
 export const publicationFields = {
   edition: z.number().int(),
   status: z.enum(['draft', 'published']),
-  source: z.string().min(1),
 };
 
 export const deadlineSchema = z

@@ -1,0 +1,41 @@
+---
+import * as current from '../data/sponsorship';
+import * as historical from '../data/sponsorship-2026';
+interface Props {
+  edition?: number;
+}
+const { edition = 2027 } = Astro.props;
+const { sponsorPackages, sponsorBenefits } = edition === 2026 ? historical : current;
+---
+
+<div class="package-comparison" role="region" aria-label="Sponsor package comparison" tabindex="0">
+  <table class="package-table">
+    <caption>{`CISA ${edition} sponsorship packages · prices in USD`}</caption>
+    <thead>
+      <tr>
+        <th scope="col">Benefit</th>
+        {sponsorPackages.map((tier) => (
+          <th scope="col">
+            {tier.name}
+            <span class="package-price">${tier.price.toLocaleString('en-US')}</span>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {sponsorBenefits.map((benefit) => (
+        <tr>
+          <th scope="row">{benefit.name}</th>
+          {sponsorPackages.map((tier) => (
+            <td class:list={{ included: benefit.tiers.includes(tier.id) }}>
+              {benefit.tiers.includes(tier.id) ? 'Included' : '—'}
+              {!benefit.tiers.includes(tier.id) && (
+                <span class="visually-hidden">Not included</span>
+              )}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

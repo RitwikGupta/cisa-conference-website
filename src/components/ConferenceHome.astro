@@ -1,0 +1,106 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Aperture from './Aperture.astro';
+import Themes from './Themes.astro';
+import SpeakerCard from './SpeakerCard.astro';
+import DeadlineList from './DeadlineList.astro';
+import { href } from '../lib/urls';
+import { themes } from '../lib/content';
+interface Props {
+  event: {
+    name: string;
+    startDate: string;
+    dateLabel: string;
+    building?: string;
+    venue: string;
+    city: string;
+    region: string;
+  };
+  intro?: string;
+  prefix?: string;
+  programAvailable: boolean;
+  speakersAvailable: boolean;
+  featured: Pick<CollectionEntry<'speakers'>, 'id' | 'data'>[];
+  deadlines: Pick<CollectionEntry<'deadlines'>, 'id' | 'data'>[];
+  topics?: Pick<CollectionEntry<'themes'>, 'id' | 'data'>[];
+}
+const {
+  event,
+  intro,
+  prefix = '',
+  programAvailable,
+  speakersAvailable,
+  featured,
+  deadlines,
+  topics = themes,
+} = Astro.props;
+---
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1>{event.name}</h1>
+      <p class="event-details">
+        <time datetime={event.startDate}>{event.dateLabel}</time> ·{' '}
+        {event.building && `${event.building}, `} {event.venue} · {event.city}, {event.region}
+      </p>
+      <p class="hero-description">{intro}</p>
+      <div class="hero-actions">
+        <a class="button" href={href(`${prefix}/program/`)}>
+          Technical program
+        </a>
+        <a class="button button-outline" href={href(`${prefix}/contribute/`)}>
+          Call for papers
+        </a>
+      </div>
+    </div>
+  </div>
+  <Aperture />
+</section>
+<section class="section wrap border-section" aria-labelledby="program-heading">
+  <h2 id="program-heading">Technical program and speakers</h2>
+  <div class="prose section-copy">
+    {programAvailable ? (
+      <p>
+        <a href={href(`${prefix}/program/`)}>Technical sessions and schedule</a>
+      </p>
+    ) : (
+      <p>The technical program will be announced.</p>
+    )}
+    {!speakersAvailable && <p>Speakers will be announced.</p>}
+  </div>
+  {featured.length > 0 && (
+    <div class="speaker-grid section-copy">
+      {featured.map((speaker) => (
+        <SpeakerCard
+          speaker={speaker}
+          profileBase={`${prefix}/speakers/`}
+          profileFragments={Boolean(prefix)}
+        />
+      ))}
+    </div>
+  )}
+  {speakersAvailable && (
+    <p class="section-copy">
+      <a href={href(`${prefix}/speakers/`)}>All speakers</a>
+    </p>
+  )}
+</section>
+<section class="section research-surface" aria-labelledby="research-heading">
+  <div class="wrap">
+    <h2 id="research-heading">Research topics</h2>
+    <Themes entries={topics} programPath={`${prefix}/program/`} />
+  </div>
+</section>
+{deadlines.length > 0 && (
+  <section class="section wrap border-section">
+    <h2>Important dates</h2>
+    <DeadlineList entries={deadlines} />
+  </section>
+)}
+<section class="section wrap border-section">
+  <h2>About CISA</h2>
+  <div class="prose section-copy">
+    <slot />
+  </div>
+</section>

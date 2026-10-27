@@ -1,80 +1,22 @@
 ---
 import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Aperture from '../components/Aperture.astro';
-import Themes from '../components/Themes.astro';
-import SpeakerCard from '../components/SpeakerCard.astro';
-import DeadlineList from '../components/DeadlineList.astro';
+import ConferenceHome from '../components/ConferenceHome.astro';
 import { event, speakers, program, deadlines } from '../lib/content';
-import { href } from '../lib/urls';
 const home = (await getEntry('pages', 'home'))!;
 const { Content } = await render(home);
 const featured = speakers.filter((speaker) => speaker.data.featured).slice(0, 3);
 ---
 
 <Base {...home.data} page="home">
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-copy">
-        <h1>{event.name}</h1>
-        <p class="event-details">
-          <time datetime={event.startDate}>{event.dateLabel}</time> · {event.venue} · {event.city},{' '}
-          {event.region}
-        </p>
-        <p class="hero-description">{home.data.intro}</p>
-        <div class="hero-actions">
-          <a class="button" href={href('/program/')}>
-            Technical program
-          </a>
-          <a class="button button-outline" href={href('/contribute/')}>
-            Call for papers
-          </a>
-        </div>
-      </div>
-    </div>
-    <Aperture />
-  </section>
-  <section class="section wrap border-section" aria-labelledby="program-heading">
-    <h2 id="program-heading">Technical program and speakers</h2>
-    <div class="prose section-copy">
-      {program.length ? (
-        <p>
-          <a href={href('/program/')}>Technical sessions and schedule</a>
-        </p>
-      ) : (
-        <p>The technical program will be announced.</p>
-      )}
-      {!speakers.length && <p>Speakers will be announced.</p>}
-    </div>
-    {featured.length > 0 && (
-      <div class="speaker-grid section-copy">
-        {featured.map((speaker) => (
-          <SpeakerCard speaker={speaker} />
-        ))}
-      </div>
-    )}
-    {speakers.length > 0 && (
-      <p class="section-copy">
-        <a href={href('/speakers/')}>All speakers</a>
-      </p>
-    )}
-  </section>
-  <section class="section research-surface" aria-labelledby="research-heading">
-    <div class="wrap">
-      <h2 id="research-heading">Research topics</h2>
-      <Themes />
-    </div>
-  </section>
-  {deadlines.length > 0 && (
-    <section class="section wrap border-section">
-      <h2>Important dates</h2>
-      <DeadlineList entries={deadlines} />
-    </section>
-  )}
-  <section class="section wrap border-section">
-    <h2>About CISA</h2>
-    <div class="prose section-copy">
-      <Content />
-    </div>
-  </section>
+  <ConferenceHome
+    event={event}
+    intro={home.data.intro}
+    programAvailable={program.length > 0}
+    speakersAvailable={speakers.length > 0}
+    featured={featured}
+    deadlines={deadlines}
+  >
+    <Content />
+  </ConferenceHome>
 </Base>

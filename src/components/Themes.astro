@@ -1,16 +1,19 @@
 ---
+import type { CollectionEntry } from 'astro:content';
 import { themes } from '../lib/content';
 import { href } from '../lib/urls';
 interface Props {
   expanded?: boolean;
+  entries?: Pick<CollectionEntry<'themes'>, 'id' | 'data'>[];
+  programPath?: string;
 }
-const { expanded = false } = Astro.props;
+const { expanded = false, entries = themes, programPath = '/program/' } = Astro.props;
 ---
 
 <div class="theme-grid">
-  {themes.map(({ id, data }) => (
+  {entries.map(({ id, data }) => (
     <article class="theme" id={expanded ? id : undefined}>
-      <h3>{expanded ? data.title : <a href={href(`/program/#${id}`)}>{data.title}</a>}</h3>
+      <h3>{expanded ? data.title : <a href={href(`${programPath}#${id}`)}>{data.title}</a>}</h3>
       <p>{data.description}</p>
       <p class="theme-examples">{data.examples.join('; ')}.</p>
     </article>

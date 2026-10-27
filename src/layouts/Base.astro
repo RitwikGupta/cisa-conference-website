@@ -1,16 +1,39 @@
 ---
 import '@fontsource-variable/inter';
 import '../styles/global.css';
-import { event } from '../lib/content';
+import { event as currentEvent } from '../lib/content';
 import { absolute, href } from '../lib/urls';
 import Wordmark from '../components/Wordmark.astro';
+import EditionSwitcher from '../components/EditionSwitcher.astro';
 interface Props {
   title: string;
   description: string;
   page?: string;
   noindex?: boolean;
+  conference?: Pick<
+    typeof currentEvent,
+    | 'name'
+    | 'edition'
+    | 'startDate'
+    | 'endDate'
+    | 'dateLabel'
+    | 'venue'
+    | 'city'
+    | 'region'
+    | 'country'
+    | 'email'
+  > & { building?: string };
 }
-const { title, description, page = '', noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  page = '',
+  noindex = false,
+  conference: event = currentEvent,
+} = Astro.props;
+const archived = event.edition !== currentEvent.edition;
+const prefix = archived ? '/2026' : '';
+const homePath = `${prefix}/`;
 const indexable = import.meta.env.PUBLIC_INDEXABLE === 'true' && !noindex;
 const canonical = new URL(Astro.url.pathname.replace(/\/404\/$/, '/404.html'), Astro.site).href;
 const nav = [
@@ -18,8 +41,9 @@ const nav = [
   { label: 'Speakers', path: '/speakers/' },
   { label: 'Call for papers', path: '/contribute/' },
   { label: 'Attend', path: '/attend/' },
+  { label: 'Exhibits', path: '/exhibits/' },
   { label: 'About', path: '/about/' },
-];
+].map((item) => ({ ...item, path: `${prefix}${item.path}` }));
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Event',
@@ -28,12 +52,12 @@ const schema = {
   startDate: event.startDate,
   endDate: event.endDate,
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  eventStatus: 'https://schema.org/EventScheduled',
-  url: absolute('/'),
-  image: absolute('/social-card.png'),
+  eventStatus: archived ? undefined : 'https://schema.org/EventScheduled',
+  url: absolute(homePath),
+  image: archived ? undefined : absolute('/social-card.png'),
   location: {
     '@type': 'Place',
-    name: event.venue,
+    name: [event.building, event.venue].filter(Boolean).join(', '),
     address: {
       '@type': 'PostalAddress',
       addressLocality: event.city,
@@ -52,25 +76,29 @@ const schema = {
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
-    <title>{page === 'home' ? event.name : `${title} · CISA 2027`}</title>
+    <title>{page === 'home' ? event.name : `${title} · CISA ${event.edition}`}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={indexable ? 'index, follow' : 'noindex, nofollow'} />
     <meta name="theme-color" content="#F7F8F5" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="CISA 2027" />
+    <meta property="og:site_name" content={`CISA ${event.edition}`} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={absolute('/social-card.png')} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content={`${event.name}. ${event.dateLabel} at ${event.venue}.`}
-    />
-    <meta name="twitter:card" content="summary_large_image" />
+    {!archived && (
+      <>
+        <meta property="og:image" content={absolute('/social-card.png')} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          property="og:image:alt"
+          content={`${event.name}. ${event.dateLabel} at ${event.venue}.`}
+        />
+      </>
+    )}
+    <meta name="twitter:card" content={archived ? 'summary' : 'summary_large_image'} />
     <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
   </head>
   <body>
@@ -79,9 +107,12 @@ const schema = {
     </a>
     <header class="site-header">
       <div class="wrap header-inner">
-        <a class="brand-link" href={href('/')} aria-label="CISA 2027 home">
-          <Wordmark />
-        </a>
+        <div class="header-brand">
+          <a class="brand-link" href={href(homePath)} aria-label={`CISA ${event.edition} home`}>
+            <Wordmark edition={event.edition} showYear={false} />
+          </a>
+          <EditionSwitcher edition={event.edition} />
+        </div>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
           <span>Menu</span>
           <span class="menu-lines" aria-hidden="true"></span>
@@ -90,7 +121,9 @@ const schema = {
           {nav.map((item) => (
             <a
               href={href(item.path)}
-              aria-current={page === item.path.split('/')[1] ? 'page' : undefined}
+              aria-current={
+                page === item.path.slice(prefix.length).split('/')[1] ? 'page' : undefined
+              }
             >
               {item.label}
             </a>
@@ -104,15 +137,17 @@ const schema = {
     <footer class="site-footer">
       <div class="wrap footer-inner">
         <div class="footer-brand">
-          <a class="brand-link" href={href('/')} aria-label="CISA 2027 home">
-            <Wordmark />
+          <a class="brand-link" href={href(homePath)} aria-label={`CISA ${event.edition} home`}>
+            <Wordmark edition={event.edition} />
           </a>
           <p>IEEE Conference on Computational Imaging Using Synthetic Apertures</p>
           <p>© {event.edition} CISA Conference</p>
         </div>
-        <a class="footer-email" href={`mailto:${event.email}`}>
-          {event.email}
-        </a>
+        <div class="footer-links">
+          <a class="footer-email" href={`mailto:${event.email}`}>
+            {event.email}
+          </a>
+        </div>
       </div>
     </footer>
     <script>

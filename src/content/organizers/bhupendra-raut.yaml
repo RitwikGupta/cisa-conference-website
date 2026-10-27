@@ -1,0 +1,18 @@
+edition: 2027
+status: published
+name: Bhupendra Raut
+role: Technical Program
+affiliation: Argonne National Laboratory
+portrait: ./portraits/bhupendra-raut.webp
+website: https://www.anl.gov/profile/bhupendra-a-raut
+order: 4
+biography: >-
+  Bhupendra A. Raut is a Computational Environmental Scientist at Argonne
+  National Laboratory. He specializes in remote sensing, atmospheric data
+  analysis, and scientific software development. His research develops
+  algorithms and scalable software to detect, characterize, track, and
+  forecast atmospheric convection from weather radar and other observations.
+  His current work includes adaptive radar scanning, real-time storm tracking,
+  and AI for autonomous analysis. He develops open-source tools and
+  interoperable workflows connecting radar processing, computer vision,
+  and quantitative analysis.

@@ -1,0 +1,17 @@
+edition: 2027
+status: published
+name: Peter Vouras
+role: Publications Chair
+affiliation: US Department of Defense
+portrait: ./portraits/peter-vouras.webp
+order: 9
+biography: >-
+  Peter Vouras chairs the IEEE Signal Processing Society Synthetic Aperture
+  Standards Committee and was the founding Chair of its Synthetic Aperture
+  Technical Working Group. The committee develops image-formation standards
+  for radar, channel sounding, radiometry, MRI, and sonar. He holds an M.S.E.
+  in Electrical and Computer Engineering from Johns Hopkins University,
+  a B.S. from George Mason University, and B.A. degrees in Economics and
+  Foreign Affairs from the University of Virginia. He is with the US
+  Department of Defense and previously worked at NIST and the Naval
+  Research Laboratory.

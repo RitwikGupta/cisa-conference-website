@@ -1,7 +1,26 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-const routes = ['/', '/program/', '/speakers/', '/contribute/', '/attend/', '/about/'];
+const routes = [
+  '/',
+  '/program/',
+  '/speakers/',
+  '/contribute/',
+  '/attend/',
+  '/about/',
+  '/exhibits/',
+  '/2026/',
+  '/2026/program/',
+  '/2026/speakers/',
+  '/2026/contribute/',
+  '/2026/attend/',
+  '/2026/about/',
+  '/2026/keynotes/',
+  '/2026/tutorials/',
+  '/2026/submissions/',
+  '/2026/climate/',
+  '/2026/exhibits/',
+];
 const widths = [360, 390, 768, 1024, 1440];
 
 for (const route of routes) {
@@ -242,13 +261,13 @@ test('artwork pauses out of view and in hidden tabs without overriding a manual 
   await expect(art).toHaveClass(/is-running/);
 });
 
-test('essential pages and navigation work without JavaScript', async ({ browser }) => {
+test('essential pages and navigation work without JavaScript', async ({ browser, baseURL }) => {
   const context = await browser.newContext({
     javaScriptEnabled: false,
     viewport: { width: 390, height: 844 },
   });
   const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4321/');
+  await page.goto(`${baseURL}/`);
   await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
   await expect(page.getByRole('button', { name: 'Pause aperture animation' })).toBeHidden();
@@ -263,7 +282,7 @@ test('essential pages and navigation work without JavaScript', async ({ browser 
   await expect(page.locator('.aperture-echo').first()).toHaveCSS('opacity', '0');
   await page.getByRole('link', { name: 'Technical program', exact: true }).click();
   await expect(page.locator('#research-themes')).toBeVisible();
-  await page.goto('http://127.0.0.1:4321/attend/');
+  await page.goto(`${baseURL}/attend/`);
   await page.getByText('Is CISA 2027 an in-person conference?', { exact: true }).click();
   await expect(page.locator('details[open]')).toContainText('Yes.');
   await context.close();
@@ -296,7 +315,10 @@ for (const route of [
   });
 }
 
-test('200% page-zoom equivalent reflow retains content and controls', async ({ browser }) => {
+test('200% page-zoom equivalent reflow retains content and controls', async ({
+  browser,
+  baseURL,
+}) => {
   // A 1024px display at 200% browser zoom exposes 512 CSS pixels. CSS zoom on
   // body is not browser zoom: it does not trigger viewport media queries.
   const context = await browser.newContext({
@@ -304,7 +326,7 @@ test('200% page-zoom equivalent reflow retains content and controls', async ({ b
     deviceScaleFactor: 2,
   });
   const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4321/contribute/');
+  await page.goto(`${baseURL}/contribute/`);
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1),
   ).toBe(false);

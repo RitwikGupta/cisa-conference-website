@@ -1,0 +1,18 @@
+edition: 2027
+status: published
+name: Eric Mason
+role: Finance Chair
+affiliation: HawkEye360
+portrait: ./portraits/eric-mason.webp
+website: https://scholar.google.com/citations?user=daNBUzEAAAAJ&hl=en
+order: 6
+biography: >-
+  Eric Mason is Director of Data Science at HawkEye360, where he leads
+  development of capabilities and products for space-based sensing,
+  detection, identification, and tracking of RF emitters. He earned his
+  Ph.D. in electrical engineering at Rensselaer Polytechnic Institute in 2017.
+  From 2017 to 2021, he researched signal processing, machine learning,
+  and optimization for radar and electronic warfare at the US Naval
+  Research Laboratory. His work centers on cognitive RF systems, including
+  a multinational cognitive electronic warfare prototype and the cognitive
+  system behind HawkEye360's maritime domain products.

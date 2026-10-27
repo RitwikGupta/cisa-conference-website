@@ -231,6 +231,59 @@
     text-decoration: none;
     color: var(--ink);
   }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    flex-shrink: 0;
+  }
+  .edition-switcher {
+    position: relative;
+  }
+  .edition-switcher summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .edition-switcher summary::-webkit-details-marker {
+    display: none;
+  }
+  .edition-switcher summary:hover,
+  .edition-switcher[open] summary {
+    background: var(--pale);
+  }
+  .edition-switcher[open] summary svg {
+    transform: rotate(180deg);
+  }
+  .edition-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 144px;
+    display: grid;
+    padding: 6px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    box-shadow: 0 8px 24px rgb(16 38 56 / 0.12);
+  }
+  .edition-options a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 8px 12px;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .edition-options a:hover,
+  .edition-options a[aria-current] {
+    background: var(--pale);
+  }
   .wordmark {
     display: inline-flex;
     align-items: center;
@@ -799,6 +852,141 @@
   .simple-page {
     padding-block: 56px;
   }
+  .footer-links {
+    display: grid;
+    gap: 4px;
+    font-size: 16px;
+  }
+  .organizer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 48px;
+  }
+  .organizer-card {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    align-items: start;
+    gap: 16px 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .organizer-card > img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+  .organizer-card > div {
+    grid-column: 2;
+  }
+  .organizer-card h3 {
+    margin-top: 4px;
+    overflow-wrap: anywhere;
+  }
+  .organizer-role,
+  .organizer-affiliation {
+    color: var(--muted);
+    font-size: 16px;
+  }
+  .organizer-affiliation {
+    margin-top: 8px;
+  }
+  .organizer-biography {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-size: 16px;
+  }
+  .organizer-biography summary {
+    color: var(--teal);
+    cursor: pointer;
+    min-height: 44px;
+    align-content: center;
+  }
+  .organizer-biography p {
+    padding-top: 12px;
+  }
+  .package-comparison {
+    max-width: 100%;
+    overflow-x: auto;
+    margin-top: 28px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+  }
+  .package-comparison:focus-visible {
+    outline: 3px solid var(--teal);
+    outline-offset: 5px;
+  }
+  .package-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: 16px;
+    line-height: 1.5;
+    background: var(--white);
+  }
+  .package-table caption {
+    text-align: left;
+    padding: 16px 20px;
+    color: var(--muted);
+    background: var(--paper);
+  }
+  .package-table th,
+  .package-table td {
+    position: relative;
+    padding: 18px 20px;
+    border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    text-align: center;
+  }
+  .package-table th {
+    font-weight: 550;
+  }
+  .package-table th:first-child {
+    text-align: left;
+    width: 36%;
+  }
+  .package-table thead th {
+    background: var(--pale);
+    font-size: 18px;
+  }
+  .package-table :is(th, td):last-child {
+    border-right: 0;
+  }
+  .package-table td {
+    color: var(--muted);
+  }
+  .package-table td.included {
+    color: var(--teal);
+    font-weight: 500;
+  }
+  .package-price {
+    display: block;
+    margin-top: 6px;
+    font-size: 22px;
+    color: var(--ink);
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .prospectus-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+    max-width: 900px;
+  }
+  .prospectus-grid img {
+    border: 1px solid var(--line);
+  }
+  .prospectus-grid figcaption {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 16px;
+  }
 }
 @layer responsive {
   @media (max-width: 1100px) {
@@ -819,6 +1007,12 @@
     }
   }
   @media (max-width: 800px) {
+    .organizer-grid {
+      grid-template-columns: 1fr;
+    }
+    .prospectus-grid {
+      grid-template-columns: 1fr;
+    }
     .header-inner {
       min-height: 76px;
       flex-wrap: wrap;

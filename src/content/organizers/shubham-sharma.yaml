@@ -1,0 +1,17 @@
+edition: 2027
+status: published
+name: Shubham Sharma
+role: Tutorials Chair
+affiliation: IEEE Synthetic Aperture Standards Committee
+portrait: ./portraits/shubham-sharma.webp
+order: 8
+biography: >-
+  Shubham Sharma is a Senior Member of IEEE with nearly a decade of
+  experience in SAR image processing. He is Secretary of the IEEE Synthetic
+  Aperture Standards Committee and Vice Chair of the working group on
+  leveraging machine learning in synthetic aperture imaging and sensing.
+  He holds a Master's degree in Computer Science and Engineering from
+  Nirma University. His experience includes fellowship projects with ISRO
+  processing RISAT-1 and other spaceborne SAR data. His interests span SAR
+  signal processing, image processing, computer vision, and remote sensing,
+  and he has contributed to SciPy and PyCon conferences.

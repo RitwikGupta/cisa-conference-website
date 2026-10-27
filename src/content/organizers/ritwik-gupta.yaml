@@ -1,0 +1,14 @@
+edition: 2027
+status: published
+name: Ritwik Gupta
+role: General Co-Chair
+affiliation: University of Maryland, College Park
+portrait: ./portraits/ritwik-gupta.webp
+website: https://ritwikgupta.me
+order: 3
+biography: >-
+  Ritwik Gupta is an Assistant Professor of Computer Science and AI at the University of Maryland, College Park.
+  He leads the [Resilient AI for Grounded Sensing Lab](https://ragslab.ai).
+  Ritwik's researc is focused on representation learning for active sensors such as radar and sonar, and perception for large data formats such as satellite imagery.
+  Ritwik received his Ph.D. from the University of California, Berkeley in Computer Science in 2025 and completed a post-doc at Berkeley in Chemistry.
+  Previously, Ritwik served as the Technical Director for Autonomy at the U.S. Department of Defense's Defense Innovation Unit.
