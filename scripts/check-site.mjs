@@ -41,6 +41,8 @@ const checkUrl = async (raw, from, label) => {
   if (!raw || /^(data:|mailto:|tel:)/.test(raw)) return;
   const url = new URL(raw, from);
   if (url.origin !== origin) return;
+  // A project site can share its origin with a separate site outside its base path.
+  if (/^(?:https?:)?\/\//i.test(raw) && !url.pathname.startsWith(base)) return;
   const file = await toFile(url.pathname);
   if (!file) {
     errors.push(`${label}: missing ${url.pathname}`);

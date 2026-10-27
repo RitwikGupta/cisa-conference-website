@@ -59,7 +59,7 @@ try {
   }
   for (const env of [
     {
-      SITE_URL: 'https://example.github.io',
+      SITE_URL: 'https://ritwikgupta.me',
       BASE_PATH: '/cisa-conference-website/',
       PUBLIC_INDEXABLE: 'false',
     },
@@ -67,6 +67,36 @@ try {
   ]) {
     run(process.execPath, [astro, 'build'], root, env);
     run(process.execPath, ['scripts/check-site.mjs'], root, env);
+    if (env.BASE_PATH !== '/') {
+      const aboutFile = path.join(root, 'dist/about/index.html');
+      const original = await readFile(aboutFile, 'utf8');
+      try {
+        const withLink = (href) => original.replace('</body>', `<a href="${href}">Test</a></body>`);
+        await writeFile(aboutFile, withLink('//ritwikgupta.me/other-site/'));
+        run(process.execPath, ['scripts/check-site.mjs'], root, env);
+        for (const [href, missing] of [
+          ['/outside-base/', '/outside-base/'],
+          [
+            'https://ritwikgupta.me/cisa-conference-website/missing/',
+            '/cisa-conference-website/missing/',
+          ],
+        ]) {
+          await writeFile(aboutFile, withLink(href));
+          const result = spawnSync(process.execPath, ['scripts/check-site.mjs'], {
+            cwd: root,
+            env: { ...process.env, ...env },
+            encoding: 'utf8',
+          });
+          if (
+            result.status === 0 ||
+            !result.stderr.includes(`about/index.html: missing ${missing}`)
+          )
+            throw new Error(`Expected the site check to reject ${href}:\n${result.stderr}`);
+        }
+      } finally {
+        await writeFile(aboutFile, original);
+      }
+    }
   }
   const env = { SITE_URL: 'http://localhost:4322', BASE_PATH: '/', PUBLIC_INDEXABLE: 'false' };
   run(process.execPath, [astro, 'build'], fixtureRoot, env);
